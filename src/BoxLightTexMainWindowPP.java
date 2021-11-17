@@ -31,12 +31,14 @@ import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.FPSAnimator;
+import org.opencv.core.Core;
+import videoCapture.VideoProcessing;
 
 /**
  * Top-level class of the application displaying the OpenGL component.
@@ -112,7 +114,24 @@ public class BoxLightTexMainWindowPP extends JFrame {
      * @param args Arguments are not used
      */
     public static void main(String[] args) {
-        new BoxLightTexMainWindowPP();
-    }
 
+        //Initiate OPENGL window
+        new BoxLightTexMainWindowPP();
+
+        /**
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new StartCodeMainWindowPP();
+            }
+        }
+        );
+
+        **/
+
+        //Initiate OPENCV window
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        new VideoProcessing();
+    }
 }
+

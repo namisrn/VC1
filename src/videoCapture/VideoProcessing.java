@@ -94,7 +94,7 @@ public class VideoProcessing extends JFrame{
      *
      */
     public BufferedImage Mat2BufferedImage(Mat imgMat){
-        int bufferedImageType = 0;
+        int bufferedImageType ;
         switch (imgMat.channels()) {
             case 1:
                 bufferedImageType = BufferedImage.TYPE_BYTE_GRAY;

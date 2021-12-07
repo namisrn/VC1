@@ -26,16 +26,16 @@
  * or implied, of JogAmp Community.
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.PMVMatrix;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 import static com.jogamp.opengl.GL.GL_TEXTURE0;
 import static com.jogamp.opengl.GL.GL_TEXTURE_2D;
@@ -77,6 +77,9 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
     private final String vertexShader0FileName = "BlinnPhongPointTex.vert";
     private final String fragmentShader0FileName = "BlinnPhongPointTex.frag";
 
+    private final String vertexShader1FileName = "O1_Basic.vert";
+    private final String fragmentShader1FileName = "O1_Basic.frag";
+
 
     // taking texture files from relative path
     private final String texturePath = ".\\resources\\";
@@ -85,11 +88,14 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
 //    final String textureFileName = "HSHLLogo2.jpg";
 
     private ShaderProgram shaderProgram0;
+    private ShaderProgram shaderProgram1;
 
     // Pointers (names) for data transfer and handling on GPU
     private int[] vaoName;  // Name of vertex array object
     private int[] vboName;	// Name of vertex buffer object
     private int[] iboName;	// Name of index buffer object
+
+
 
     // Define Materials
     private Material material0;
@@ -163,28 +169,30 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
 
         // BEGIN: Preparing scene
         // BEGIN: Allocating vertex array objects and buffers for each object
-        int noOfObjects = 1;
+        int noOfObjects = 3;
         // create vertex array objects for noOfObjects objects (VAO)
         vaoName = new int[noOfObjects];
         gl.glGenVertexArrays(noOfObjects, vaoName, 0);
-        if (vaoName[0] < 1)
+        if (vaoName[0] < 2)
             System.err.println("Error allocating vertex array object (VAO).");
 
         // create vertex buffer objects for noOfObjects objects (VBO)
         vboName = new int[noOfObjects];
         gl.glGenBuffers(noOfObjects, vboName, 0);
-        if (vboName[0] < 1)
+        if (vboName[0] < 2)
             System.err.println("Error allocating vertex buffer object (VBO).");
 
         // create index buffer objects for noOfObjects objects (IBO)
         iboName = new int[noOfObjects];
         gl.glGenBuffers(noOfObjects, iboName, 0);
-        if (iboName[0] < 1)
+        if (iboName[0] < 2)
             System.err.println("Error allocating index buffer object.");
         // END: Allocating vertex array objects and buffers for each object
 
         // Initialize objects to be drawn (see respective sub-methods)
         initObject0(gl);
+        initObject1(gl);
+        initObject2(gl);
 
         // Specify light parameters
         float[] lightPosition = {0.0f, 3.0f, 3.0f, 1.0f};
@@ -225,23 +233,23 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
      */
     private void initObject0(GL3 gl) {
         // BEGIN: Prepare cube for drawing (object 1)
-        gl.glBindVertexArray(vaoName[0]);
-        shaderProgram0 = new ShaderProgram(gl);
-        shaderProgram0.loadShaderAndCreateProgram(shaderPath,
-                vertexShader0FileName, fragmentShader0FileName);
+        gl.glBindVertexArray(vaoName[1]);
+        shaderProgram1 = new ShaderProgram(gl);
+        shaderProgram1.loadShaderAndCreateProgram(shaderPath,
+                vertexShader1FileName, fragmentShader1FileName);
 
-        float[] color0 = {0.7f, 0.7f, 0.7f};
-        float[] cubeVertices = BoxTex.makeBoxVertices(1.0f, 0.87f, 1.0f, color0);
-        int[] cubeIndices = BoxTex.makeBoxIndicesForTriangleStrip();
+        float[] color1 = {0.8f, 0.1f, 0.8f};
+        float[] cubeVertices = Box.makeBoxVertices(1.5f, 1.5f, 0.5f, color1);
+        int[] cubeIndices = Box.makeBoxIndicesForTriangleStrip();
 
         // activate and initialize vertex buffer object (VBO)
-        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vboName[0]);
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vboName[1]);
         // floats use 4 bytes in Java
         gl.glBufferData(GL.GL_ARRAY_BUFFER, cubeVertices.length * 4,
                 FloatBuffer.wrap(cubeVertices), GL.GL_STATIC_DRAW);
 
         // activate and initialize index buffer object (IBO)
-        gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, iboName[0]);
+        gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, iboName[1]);
         // integers use 4 bytes in Java
         gl.glBufferData(GL.GL_ELEMENT_ARRAY_BUFFER, cubeIndices.length * 4,
                 IntBuffer.wrap(cubeIndices), GL.GL_STATIC_DRAW);
@@ -251,60 +259,89 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         // Defining input for vertex shader
         // Pointer for the vertex shader to the position information per vertex
         gl.glEnableVertexAttribArray(0);
-        gl.glVertexAttribPointer(0, 3, GL.GL_FLOAT, false, 11*4, 0);
+        gl.glVertexAttribPointer(0, 3, GL.GL_FLOAT, false, 9*4, 0);
         // Pointer for the vertex shader to the color information per vertex
         gl.glEnableVertexAttribArray(1);
-        gl.glVertexAttribPointer(1, 3, GL.GL_FLOAT, false, 11*4, 3*4);
+        gl.glVertexAttribPointer(1, 3, GL.GL_FLOAT, false, 9*4, 3*4);
         // Pointer for the vertex shader to the normal information per vertex
         gl.glEnableVertexAttribArray(2);
-        gl.glVertexAttribPointer(2, 3, GL.GL_FLOAT, false, 11*4, 6*4);
-        // Pointer for the vertex shader to the texture coordinates information per vertex
-        gl.glEnableVertexAttribArray(3);
-        gl.glVertexAttribPointer(3, 2, GL.GL_FLOAT, false, 11*4, 9*4);
+        gl.glVertexAttribPointer(2, 3, GL.GL_FLOAT, false, 9*4, 6*4);
+        // END: Prepare cube for drawing
+    }
 
-        // Specification of material parameters (blue material)
-//        float[] matEmission = {0.0f, 0.0f, 0.0f, 1.0f};
-//        float[] matAmbient =  {0.0f, 0.0f, 0.1f, 1.0f};
-//        float[] matDiffuse =  {0.1f, 0.2f, 0.7f, 1.0f};
-//        float[] matSpecular = {0.7f, 0.7f, 0.7f, 1.0f};
-//        float matShininess = 200.0f;
 
-        // Metallic material
-        float[] matEmission = {0.0f, 0.0f, 0.0f, 1.0f};
-        float[] matAmbient =  {0.2f, 0.2f, 0.2f, 1.0f};
-        float[] matDiffuse =  {0.5f, 0.5f, 0.5f, 1.0f};
-        float[] matSpecular = {0.7f, 0.7f, 0.7f, 1.0f};
-        float matShininess = 200.0f;
+    private void initObject1(GL3 gl) {
+        // BEGIN: Prepare cube for drawing (object 1)
+        gl.glBindVertexArray(vaoName[1]);
+        shaderProgram1 = new ShaderProgram(gl);
+        shaderProgram1.loadShaderAndCreateProgram(shaderPath,
+                vertexShader1FileName, fragmentShader1FileName);
 
-        material0 = new Material(matEmission, matAmbient, matDiffuse, matSpecular, matShininess);
+        float[] color1 = {0.1f, 0.1f, 0.8f};
+        float[] cubeVertices = Box.makeBoxVertices(0.5f, 0.5f, 0.4f, color1);
+        int[] cubeIndices = Box.makeBoxIndicesForTriangleStrip();
 
-        // Load and prepare texture
-        Texture texture = null;
-        try {
-            File textureFile = new File(texturePath+textureFileName);
-            texture = TextureIO.newTexture(textureFile, true);
+        // activate and initialize vertex buffer object (VBO)
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vboName[1]);
+        // floats use 4 bytes in Java
+        gl.glBufferData(GL.GL_ARRAY_BUFFER, cubeVertices.length * 4,
+                FloatBuffer.wrap(cubeVertices), GL.GL_STATIC_DRAW);
 
-            texture.setTexParameteri(gl, gl.GL_TEXTURE_MIN_FILTER, gl.GL_LINEAR);
-            texture.setTexParameteri(gl, gl.GL_TEXTURE_MAG_FILTER, gl.GL_LINEAR);
-            texture.setTexParameteri(gl, gl.GL_TEXTURE_WRAP_S, gl.GL_CLAMP_TO_EDGE);
-            texture.setTexParameteri(gl, gl.GL_TEXTURE_WRAP_T, gl.GL_CLAMP_TO_EDGE);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if (texture != null)
-            System.out.println("Texture loaded successfully from: " + texturePath+textureFileName);
-        else
-            System.err.println("Error loading textue.");
-        System.out.println("  Texture height: " + texture.getImageHeight());
-        System.out.println("  Texture width: " + texture.getImageWidth());
-        System.out.println("  Texture object: " + texture.getTextureObject(gl));
-        System.out.println("  Estimated memory size of texture: " + texture.getEstimatedMemorySize());
+        // activate and initialize index buffer object (IBO)
+        gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, iboName[1]);
+        // integers use 4 bytes in Java
+        gl.glBufferData(GL.GL_ELEMENT_ARRAY_BUFFER, cubeIndices.length * 4,
+                IntBuffer.wrap(cubeIndices), GL.GL_STATIC_DRAW);
 
-        texture.enable(gl);
-        // Activate texture in slot 0 (might have to go to "display()")
-        gl.glActiveTexture(GL_TEXTURE0);
-        // Use texture as 2D texture (might have to go to "display()")
-        gl.glBindTexture(GL_TEXTURE_2D, texture.getTextureObject(gl));
+        // Activate and order vertex buffer object data for the vertex shader
+        // The vertex buffer contains: position (3), color (3), normals (3)
+        // Defining input for vertex shader
+        // Pointer for the vertex shader to the position information per vertex
+        gl.glEnableVertexAttribArray(0);
+        gl.glVertexAttribPointer(0, 3, GL.GL_FLOAT, false, 9*4, 0);
+        // Pointer for the vertex shader to the color information per vertex
+        gl.glEnableVertexAttribArray(1);
+        gl.glVertexAttribPointer(1, 3, GL.GL_FLOAT, false, 9*4, 3*4);
+        // Pointer for the vertex shader to the normal information per vertex
+        gl.glEnableVertexAttribArray(2);
+        gl.glVertexAttribPointer(2, 3, GL.GL_FLOAT, false, 9*4, 6*4);
+        // END: Prepare cube for drawing
+    }
+    private void initObject2(GL3 gl) {
+        // BEGIN: Prepare cube for drawing (object 1)
+        gl.glBindVertexArray(vaoName[1]);
+        shaderProgram1 = new ShaderProgram(gl);
+        shaderProgram1.loadShaderAndCreateProgram(shaderPath,
+                vertexShader1FileName, fragmentShader1FileName);
+
+        float[] color1 = {0.1f, 0.1f, 0.8f};
+        float[] cubeVertices = Box.makeBoxVertices(0.5f, 0.5f, 0.4f, color1);
+        int[] cubeIndices = Box.makeBoxIndicesForTriangleStrip();
+
+        // activate and initialize vertex buffer object (VBO)
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vboName[1]);
+        // floats use 4 bytes in Java
+        gl.glBufferData(GL.GL_ARRAY_BUFFER, cubeVertices.length * 4,
+                FloatBuffer.wrap(cubeVertices), GL.GL_STATIC_DRAW);
+
+        // activate and initialize index buffer object (IBO)
+        gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, iboName[1]);
+        // integers use 4 bytes in Java
+        gl.glBufferData(GL.GL_ELEMENT_ARRAY_BUFFER, cubeIndices.length * 4,
+                IntBuffer.wrap(cubeIndices), GL.GL_STATIC_DRAW);
+
+        // Activate and order vertex buffer object data for the vertex shader
+        // The vertex buffer contains: position (3), color (3), normals (3)
+        // Defining input for vertex shader
+        // Pointer for the vertex shader to the position information per vertex
+        gl.glEnableVertexAttribArray(0);
+        gl.glVertexAttribPointer(0, 3, GL.GL_FLOAT, false, 9*4, 0);
+        // Pointer for the vertex shader to the color information per vertex
+        gl.glEnableVertexAttribArray(1);
+        gl.glVertexAttribPointer(1, 3, GL.GL_FLOAT, false, 9*4, 3*4);
+        // Pointer for the vertex shader to the normal information per vertex
+        gl.glEnableVertexAttribArray(2);
+        gl.glVertexAttribPointer(2, 3, GL.GL_FLOAT, false, 9*4, 6*4);
         // END: Prepare cube for drawing
     }
 
@@ -346,33 +383,48 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         float[] lightPos = {0f, 3f, 0f};
 
         pmvMatrix.glPushMatrix();
-//        pmvMatrix.glTranslatef(0f, 0.5f, 0f);
+       pmvMatrix.glTranslatef(0f, 0.5f, 0f);
         displayObject0(gl, lightPos);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-1f, 0.5f, 0f);
+        displayObject1(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(1f, 0.5f, 0f);
+        displayObject2(gl);
         pmvMatrix.glPopMatrix();
     }
 
     private void displayObject0(GL3 gl, float[] lightPos) {
-        // BEGIN: Draw the second object (object 1)
-        gl.glUseProgram(shaderProgram0.getShaderProgramID());
+        gl.glUseProgram(shaderProgram1.getShaderProgramID());
         // Transfer the PVM-Matrix (model-view and projection matrix) to the vertex shader
         gl.glUniformMatrix4fv(0, 1, false, pmvMatrix.glGetPMatrixf());
         gl.glUniformMatrix4fv(1, 1, false, pmvMatrix.glGetMvMatrixf());
-        gl.glUniformMatrix4fv(2, 1, false, pmvMatrix.glGetMvitMatrixf());
-        // transfer parameters of light source
-        gl.glUniform4fv(3, 1, light0.getPosition(), 0);
-        gl.glUniform4fv(4, 1, light0.getAmbient(), 0);
-        gl.glUniform4fv(5, 1, light0.getDiffuse(), 0);
-        gl.glUniform4fv(6, 1, light0.getSpecular(), 0);
-        // transfer material parameters
-        gl.glUniform4fv(7, 1, material0.getEmission(), 0);
-        gl.glUniform4fv(8, 1, material0.getAmbient(), 0);
-        gl.glUniform4fv(9, 1, material0.getDiffuse(), 0);
-        gl.glUniform4fv(10, 1, material0.getSpecular(), 0);
-        gl.glUniform1f(11, material0.getShininess());
-
-        gl.glBindVertexArray(vaoName[0]);
+        gl.glBindVertexArray(vaoName[1]);
         // Draws the elements in the order defined by the index buffer object (IBO)
-        gl.glDrawElements(GL.GL_TRIANGLE_STRIP, BoxTex.noOfIndicesForBox(), GL.GL_UNSIGNED_INT, 0);
+        gl.glDrawElements(GL.GL_TRIANGLE_STRIP, Box.noOfIndicesForBox(), GL.GL_UNSIGNED_INT, 0);
+    }
+
+    private void displayObject1(GL3 gl) {
+        gl.glUseProgram(shaderProgram1.getShaderProgramID());
+        // Transfer the PVM-Matrix (model-view and projection matrix) to the vertex shader
+        gl.glUniformMatrix4fv(0, 1, false, pmvMatrix.glGetPMatrixf());
+        gl.glUniformMatrix4fv(1, 1, false, pmvMatrix.glGetMvMatrixf());
+        gl.glBindVertexArray(vaoName[1]);
+        // Draws the elements in the order defined by the index buffer object (IBO)
+        gl.glDrawElements(GL.GL_TRIANGLE_STRIP, Box.noOfIndicesForBox(), GL.GL_UNSIGNED_INT, 0);
+    }
+    private void displayObject2(GL3 gl) {
+        gl.glUseProgram(shaderProgram1.getShaderProgramID());
+        // Transfer the PVM-Matrix (model-view and projection matrix) to the vertex shader
+        gl.glUniformMatrix4fv(0, 1, false, pmvMatrix.glGetPMatrixf());
+        gl.glUniformMatrix4fv(1, 1, false, pmvMatrix.glGetMvMatrixf());
+        gl.glBindVertexArray(vaoName[1]);
+        // Draws the elements in the order defined by the index buffer object (IBO)
+        gl.glDrawElements(GL.GL_TRIANGLE_STRIP, Box.noOfIndicesForBox(), GL.GL_UNSIGNED_INT, 0);
     }
 
     /**
@@ -408,6 +460,7 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         // Detach and delete shader program
         gl.glUseProgram(0);
         shaderProgram0.deleteShaderProgram();
+        shaderProgram1.deleteShaderProgram();
 
         // deactivate VAO and VBO
         gl.glBindVertexArray(0);

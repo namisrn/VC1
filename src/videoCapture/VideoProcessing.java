@@ -50,7 +50,7 @@ public class VideoProcessing extends JFrame{
 
         panel1 = new BufferedImagePanel();
         contentPane.add(panel1);
-        contentPane.add(initSlider(contentPane));
+
 
         // place the frame at the center of the screen and show
         pack();
@@ -188,7 +188,7 @@ public class VideoProcessing extends JFrame{
                 }
             }
 
-            //use the right matrice for certain function, mat or test
+            //use the right matrix for certain function, mat or test
             panel1.setImage(Mat2BufferedImage(test));
             contours.clear();
 

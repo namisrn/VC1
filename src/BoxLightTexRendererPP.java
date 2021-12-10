@@ -169,23 +169,23 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
 
         // BEGIN: Preparing scene
         // BEGIN: Allocating vertex array objects and buffers for each object
-        int noOfObjects = 3;
+        int noOfObjects = 28;
         // create vertex array objects for noOfObjects objects (VAO)
         vaoName = new int[noOfObjects];
         gl.glGenVertexArrays(noOfObjects, vaoName, 0);
-        if (vaoName[0] < 2)
+        if (vaoName[0] < 27)
             System.err.println("Error allocating vertex array object (VAO).");
 
         // create vertex buffer objects for noOfObjects objects (VBO)
         vboName = new int[noOfObjects];
         gl.glGenBuffers(noOfObjects, vboName, 0);
-        if (vboName[0] < 2)
+        if (vboName[0] < 27)
             System.err.println("Error allocating vertex buffer object (VBO).");
 
         // create index buffer objects for noOfObjects objects (IBO)
         iboName = new int[noOfObjects];
         gl.glGenBuffers(noOfObjects, iboName, 0);
-        if (iboName[0] < 2)
+        if (iboName[0] < 27)
             System.err.println("Error allocating index buffer object.");
         // END: Allocating vertex array objects and buffers for each object
 
@@ -193,6 +193,14 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         initObject0(gl);
         initObject1(gl);
         initObject2(gl);
+        initObject3(gl);
+        initObject4(gl);
+        initObject5(gl);
+        initObject6(gl);
+        initObject7(gl);
+        initObject8(gl);
+        initObject9(gl);
+
 
         // Specify light parameters
         float[] lightPosition = {0.0f, 3.0f, 3.0f, 1.0f};
@@ -218,7 +226,7 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         pmvMatrix = new PMVMatrix();
 
         // Start parameter settings for the interaction handler might be called here
-        interactionHandler.setEyeZ(4);
+        interactionHandler.setEyeZ(11);
         // END: Preparing scene
     }
 
@@ -231,25 +239,27 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
      * Initializes the GPU for drawing object1
      * @param gl OpenGL context
      */
+
+   //BLock Lang gerade
     private void initObject0(GL3 gl) {
         // BEGIN: Prepare cube for drawing (object 1)
-        gl.glBindVertexArray(vaoName[1]);
-        shaderProgram1 = new ShaderProgram(gl);
-        shaderProgram1.loadShaderAndCreateProgram(shaderPath,
+        gl.glBindVertexArray(vaoName[0]);
+        shaderProgram0 = new ShaderProgram(gl);
+        shaderProgram0.loadShaderAndCreateProgram(shaderPath,
                 vertexShader1FileName, fragmentShader1FileName);
 
-        float[] color1 = {0.8f, 0.1f, 0.8f};
-        float[] cubeVertices = Box.makeBoxVertices(1.5f, 1.5f, 0.5f, color1);
+        float[] color2 = {0.5f, 0.2f, 0.5f};
+        float[] cubeVertices = Box.makeBoxVertices(0.5f, 0.5f, 0.4f, color2);
         int[] cubeIndices = Box.makeBoxIndicesForTriangleStrip();
 
         // activate and initialize vertex buffer object (VBO)
-        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vboName[1]);
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vboName[0]);
         // floats use 4 bytes in Java
         gl.glBufferData(GL.GL_ARRAY_BUFFER, cubeVertices.length * 4,
                 FloatBuffer.wrap(cubeVertices), GL.GL_STATIC_DRAW);
 
         // activate and initialize index buffer object (IBO)
-        gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, iboName[1]);
+        gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, iboName[0]);
         // integers use 4 bytes in Java
         gl.glBufferData(GL.GL_ELEMENT_ARRAY_BUFFER, cubeIndices.length * 4,
                 IntBuffer.wrap(cubeIndices), GL.GL_STATIC_DRAW);
@@ -269,7 +279,7 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         // END: Prepare cube for drawing
     }
 
-
+   //Block L Links
     private void initObject1(GL3 gl) {
         // BEGIN: Prepare cube for drawing (object 1)
         gl.glBindVertexArray(vaoName[1]);
@@ -277,7 +287,7 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         shaderProgram1.loadShaderAndCreateProgram(shaderPath,
                 vertexShader1FileName, fragmentShader1FileName);
 
-        float[] color1 = {0.1f, 0.1f, 0.8f};
+        float[] color1 = {0.5f, 0.8f, 0.5f};
         float[] cubeVertices = Box.makeBoxVertices(0.5f, 0.5f, 0.4f, color1);
         int[] cubeIndices = Box.makeBoxIndicesForTriangleStrip();
 
@@ -307,25 +317,27 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         gl.glVertexAttribPointer(2, 3, GL.GL_FLOAT, false, 9*4, 6*4);
         // END: Prepare cube for drawing
     }
+
+   //Block L Rechts
     private void initObject2(GL3 gl) {
         // BEGIN: Prepare cube for drawing (object 1)
-        gl.glBindVertexArray(vaoName[1]);
+        gl.glBindVertexArray(vaoName[2]);
         shaderProgram1 = new ShaderProgram(gl);
         shaderProgram1.loadShaderAndCreateProgram(shaderPath,
                 vertexShader1FileName, fragmentShader1FileName);
 
-        float[] color1 = {0.1f, 0.1f, 0.8f};
+        float[] color1 = {0.8f, 0.7f, 0.5f};
         float[] cubeVertices = Box.makeBoxVertices(0.5f, 0.5f, 0.4f, color1);
         int[] cubeIndices = Box.makeBoxIndicesForTriangleStrip();
 
         // activate and initialize vertex buffer object (VBO)
-        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vboName[1]);
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vboName[2]);
         // floats use 4 bytes in Java
         gl.glBufferData(GL.GL_ARRAY_BUFFER, cubeVertices.length * 4,
                 FloatBuffer.wrap(cubeVertices), GL.GL_STATIC_DRAW);
 
         // activate and initialize index buffer object (IBO)
-        gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, iboName[1]);
+        gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, iboName[2]);
         // integers use 4 bytes in Java
         gl.glBufferData(GL.GL_ELEMENT_ARRAY_BUFFER, cubeIndices.length * 4,
                 IntBuffer.wrap(cubeIndices), GL.GL_STATIC_DRAW);
@@ -344,6 +356,276 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         gl.glVertexAttribPointer(2, 3, GL.GL_FLOAT, false, 9*4, 6*4);
         // END: Prepare cube for drawing
     }
+
+    //Block Viereck
+    private void initObject3(GL3 gl) {
+        // BEGIN: Prepare cube for drawing (object 1)
+        gl.glBindVertexArray(vaoName[3]);
+        shaderProgram1 = new ShaderProgram(gl);
+        shaderProgram1.loadShaderAndCreateProgram(shaderPath,
+                vertexShader1FileName, fragmentShader1FileName);
+
+        float[] color1 = {1f, 0.2f, 0.5f};
+        float[] cubeVertices = Box.makeBoxVertices(0.5f, 0.5f, 0.4f, color1);
+        int[] cubeIndices = Box.makeBoxIndicesForTriangleStrip();
+
+        // activate and initialize vertex buffer object (VBO)
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vboName[3]);
+        // floats use 4 bytes in Java
+        gl.glBufferData(GL.GL_ARRAY_BUFFER, cubeVertices.length * 4,
+                FloatBuffer.wrap(cubeVertices), GL.GL_STATIC_DRAW);
+
+        // activate and initialize index buffer object (IBO)
+        gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, iboName[3]);
+        // integers use 4 bytes in Java
+        gl.glBufferData(GL.GL_ELEMENT_ARRAY_BUFFER, cubeIndices.length * 4,
+                IntBuffer.wrap(cubeIndices), GL.GL_STATIC_DRAW);
+
+        // Activate and order vertex buffer object data for the vertex shader
+        // The vertex buffer contains: position (3), color (3), normals (3)
+        // Defining input for vertex shader
+        // Pointer for the vertex shader to the position information per vertex
+        gl.glEnableVertexAttribArray(0);
+        gl.glVertexAttribPointer(0, 3, GL.GL_FLOAT, false, 9*4, 0);
+        // Pointer for the vertex shader to the color information per vertex
+        gl.glEnableVertexAttribArray(1);
+        gl.glVertexAttribPointer(1, 3, GL.GL_FLOAT, false, 9*4, 3*4);
+        // Pointer for the vertex shader to the normal information per vertex
+        gl.glEnableVertexAttribArray(2);
+        gl.glVertexAttribPointer(2, 3, GL.GL_FLOAT, false, 9*4, 6*4);
+        // END: Prepare cube for drawing
+    }
+
+    //Block Podest
+    private void initObject4(GL3 gl) {
+        // BEGIN: Prepare cube for drawing (object 1)
+        gl.glBindVertexArray(vaoName[4]);
+        shaderProgram1 = new ShaderProgram(gl);
+        shaderProgram1.loadShaderAndCreateProgram(shaderPath,
+                vertexShader1FileName, fragmentShader1FileName);
+
+        float[] color1 = {1.5f, 0.5f, 0.5f};
+        float[] cubeVertices = Box.makeBoxVertices(0.5f, 0.5f, 0.5f, color1);
+        int[] cubeIndices = Box.makeBoxIndicesForTriangleStrip();
+
+        // activate and initialize vertex buffer object (VBO)
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vboName[4]);
+        // floats use 4 bytes in Java
+        gl.glBufferData(GL.GL_ARRAY_BUFFER, cubeVertices.length * 4,
+                FloatBuffer.wrap(cubeVertices), GL.GL_STATIC_DRAW);
+
+        // activate and initialize index buffer object (IBO)
+        gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, iboName[4]);
+        // integers use 4 bytes in Java
+        gl.glBufferData(GL.GL_ELEMENT_ARRAY_BUFFER, cubeIndices.length * 4,
+                IntBuffer.wrap(cubeIndices), GL.GL_STATIC_DRAW);
+
+        // Activate and order vertex buffer object data for the vertex shader
+        // The vertex buffer contains: position (3), color (3), normals (3)
+        // Defining input for vertex shader
+        // Pointer for the vertex shader to the position information per vertex
+        gl.glEnableVertexAttribArray(0);
+        gl.glVertexAttribPointer(0, 3, GL.GL_FLOAT, false, 9*4, 0);
+        // Pointer for the vertex shader to the color information per vertex
+        gl.glEnableVertexAttribArray(1);
+        gl.glVertexAttribPointer(1, 3, GL.GL_FLOAT, false, 9*4, 3*4);
+        // Pointer for the vertex shader to the normal information per vertex
+        gl.glEnableVertexAttribArray(2);
+        gl.glVertexAttribPointer(2, 3, GL.GL_FLOAT, false, 9*4, 6*4);
+        // END: Prepare cube for drawing
+    }
+
+    //Block versetzt rechts
+    private void initObject5(GL3 gl) {
+        // BEGIN: Prepare cube for drawing (object 1)
+        gl.glBindVertexArray(vaoName[5]);
+        shaderProgram1 = new ShaderProgram(gl);
+        shaderProgram1.loadShaderAndCreateProgram(shaderPath,
+                vertexShader1FileName, fragmentShader1FileName);
+
+        float[] color1 = {0.1f, 0.2f, 0.5f};
+        float[] cubeVertices = Box.makeBoxVertices(0.5f, 0.5f, 0.4f, color1);
+        int[] cubeIndices = Box.makeBoxIndicesForTriangleStrip();
+
+        // activate and initialize vertex buffer object (VBO)
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vboName[5]);
+        // floats use 4 bytes in Java
+        gl.glBufferData(GL.GL_ARRAY_BUFFER, cubeVertices.length * 4,
+                FloatBuffer.wrap(cubeVertices), GL.GL_STATIC_DRAW);
+
+        // activate and initialize index buffer object (IBO)
+        gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, iboName[5]);
+        // integers use 4 bytes in Java
+        gl.glBufferData(GL.GL_ELEMENT_ARRAY_BUFFER, cubeIndices.length * 4,
+                IntBuffer.wrap(cubeIndices), GL.GL_STATIC_DRAW);
+
+        // Activate and order vertex buffer object data for the vertex shader
+        // The vertex buffer contains: position (3), color (3), normals (3)
+        // Defining input for vertex shader
+        // Pointer for the vertex shader to the position information per vertex
+        gl.glEnableVertexAttribArray(0);
+        gl.glVertexAttribPointer(0, 3, GL.GL_FLOAT, false, 9*4, 0);
+        // Pointer for the vertex shader to the color information per vertex
+        gl.glEnableVertexAttribArray(1);
+        gl.glVertexAttribPointer(1, 3, GL.GL_FLOAT, false, 9*4, 3*4);
+        // Pointer for the vertex shader to the normal information per vertex
+        gl.glEnableVertexAttribArray(2);
+        gl.glVertexAttribPointer(2, 3, GL.GL_FLOAT, false, 9*4, 6*4);
+        // END: Prepare cube for drawing
+    }
+
+    //Block versetzt links
+    private void initObject6(GL3 gl) {
+        // BEGIN: Prepare cube for drawing (object 1)
+        gl.glBindVertexArray(vaoName[6]);
+        shaderProgram1 = new ShaderProgram(gl);
+        shaderProgram1.loadShaderAndCreateProgram(shaderPath,
+                vertexShader1FileName, fragmentShader1FileName);
+
+        float[] color1 = {1f, 0.9f, 0.5f};
+        float[] cubeVertices = Box.makeBoxVertices(0.5f, 0.5f, 0.4f, color1);
+        int[] cubeIndices = Box.makeBoxIndicesForTriangleStrip();
+
+        // activate and initialize vertex buffer object (VBO)
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vboName[6]);
+        // floats use 4 bytes in Java
+        gl.glBufferData(GL.GL_ARRAY_BUFFER, cubeVertices.length * 4,
+                FloatBuffer.wrap(cubeVertices), GL.GL_STATIC_DRAW);
+
+        // activate and initialize index buffer object (IBO)
+        gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, iboName[6]);
+        // integers use 4 bytes in Java
+        gl.glBufferData(GL.GL_ELEMENT_ARRAY_BUFFER, cubeIndices.length * 4,
+                IntBuffer.wrap(cubeIndices), GL.GL_STATIC_DRAW);
+
+        // Activate and order vertex buffer object data for the vertex shader
+        // The vertex buffer contains: position (3), color (3), normals (3)
+        // Defining input for vertex shader
+        // Pointer for the vertex shader to the position information per vertex
+        gl.glEnableVertexAttribArray(0);
+        gl.glVertexAttribPointer(0, 3, GL.GL_FLOAT, false, 9*4, 0);
+        // Pointer for the vertex shader to the color information per vertex
+        gl.glEnableVertexAttribArray(1);
+        gl.glVertexAttribPointer(1, 3, GL.GL_FLOAT, false, 9*4, 3*4);
+        // Pointer for the vertex shader to the normal information per vertex
+        gl.glEnableVertexAttribArray(2);
+        gl.glVertexAttribPointer(2, 3, GL.GL_FLOAT, false, 9*4, 6*4);
+        // END: Prepare cube for drawing
+    }
+    private void initObject7(GL3 gl) {
+        // BEGIN: Prepare cube for drawing (object 1)
+        gl.glBindVertexArray(vaoName[7]);
+        shaderProgram1 = new ShaderProgram(gl);
+        shaderProgram1.loadShaderAndCreateProgram(shaderPath,
+                vertexShader1FileName, fragmentShader1FileName);
+
+        float[] color1 = {1f, 1f, 1f};
+        float[] cubeVertices = Box.makeBoxVertices(0.5f, 0.5f, 0.0f, color1);
+        int[] cubeIndices = Box.makeBoxIndicesForTriangleStrip();
+
+        // activate and initialize vertex buffer object (VBO)
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vboName[7]);
+        // floats use 4 bytes in Java
+        gl.glBufferData(GL.GL_ARRAY_BUFFER, cubeVertices.length * 4,
+                FloatBuffer.wrap(cubeVertices), GL.GL_STATIC_DRAW);
+
+        // activate and initialize index buffer object (IBO)
+        gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, iboName[7]);
+        // integers use 4 bytes in Java
+        gl.glBufferData(GL.GL_ELEMENT_ARRAY_BUFFER, cubeIndices.length * 4,
+                IntBuffer.wrap(cubeIndices), GL.GL_STATIC_DRAW);
+
+        // Activate and order vertex buffer object data for the vertex shader
+        // The vertex buffer contains: position (3), color (3), normals (3)
+        // Defining input for vertex shader
+        // Pointer for the vertex shader to the position information per vertex
+        gl.glEnableVertexAttribArray(0);
+        gl.glVertexAttribPointer(0, 3, GL.GL_FLOAT, false, 9*4, 0);
+        // Pointer for the vertex shader to the color information per vertex
+        gl.glEnableVertexAttribArray(1);
+        gl.glVertexAttribPointer(1, 3, GL.GL_FLOAT, false, 9*4, 3*4);
+        // Pointer for the vertex shader to the normal information per vertex
+        gl.glEnableVertexAttribArray(2);
+        gl.glVertexAttribPointer(2, 3, GL.GL_FLOAT, false, 9*4, 6*4);
+        // END: Prepare cube for drawing
+    }
+    private void initObject8(GL3 gl) {
+        // BEGIN: Prepare cube for drawing (object 1)
+        gl.glBindVertexArray(vaoName[8]);
+        shaderProgram1 = new ShaderProgram(gl);
+        shaderProgram1.loadShaderAndCreateProgram(shaderPath,
+                vertexShader1FileName, fragmentShader1FileName);
+
+        float[] color1 = {1f, 1f, 1f};
+        float[] cubeVertices = Box.makeBoxVertices(0f, 0.5f, 0.5f, color1);
+        int[] cubeIndices = Box.makeBoxIndicesForTriangleStrip();
+
+        // activate and initialize vertex buffer object (VBO)
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vboName[8]);
+        // floats use 4 bytes in Java
+        gl.glBufferData(GL.GL_ARRAY_BUFFER, cubeVertices.length * 4,
+                FloatBuffer.wrap(cubeVertices), GL.GL_STATIC_DRAW);
+
+        // activate and initialize index buffer object (IBO)
+        gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, iboName[8]);
+        // integers use 4 bytes in Java
+        gl.glBufferData(GL.GL_ELEMENT_ARRAY_BUFFER, cubeIndices.length * 4,
+                IntBuffer.wrap(cubeIndices), GL.GL_STATIC_DRAW);
+
+        // Activate and order vertex buffer object data for the vertex shader
+        // The vertex buffer contains: position (3), color (3), normals (3)
+        // Defining input for vertex shader
+        // Pointer for the vertex shader to the position information per vertex
+        gl.glEnableVertexAttribArray(0);
+        gl.glVertexAttribPointer(0, 3, GL.GL_FLOAT, false, 9*4, 0);
+        // Pointer for the vertex shader to the color information per vertex
+        gl.glEnableVertexAttribArray(1);
+        gl.glVertexAttribPointer(1, 3, GL.GL_FLOAT, false, 9*4, 3*4);
+        // Pointer for the vertex shader to the normal information per vertex
+        gl.glEnableVertexAttribArray(2);
+        gl.glVertexAttribPointer(2, 3, GL.GL_FLOAT, false, 9*4, 6*4);
+        // END: Prepare cube for drawing
+    }
+    private void initObject9(GL3 gl) {
+        // BEGIN: Prepare cube for drawing (object 1)
+        gl.glBindVertexArray(vaoName[9]);
+        shaderProgram1 = new ShaderProgram(gl);
+        shaderProgram1.loadShaderAndCreateProgram(shaderPath,
+                vertexShader1FileName, fragmentShader1FileName);
+
+        float[] color1 = {1f, 1f, 1f};
+        float[] cubeVertices = Box.makeBoxVertices(0.5f, 0f, 0.5f, color1);
+        int[] cubeIndices = Box.makeBoxIndicesForTriangleStrip();
+
+        // activate and initialize vertex buffer object (VBO)
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vboName[9]);
+        // floats use 4 bytes in Java
+        gl.glBufferData(GL.GL_ARRAY_BUFFER, cubeVertices.length * 4,
+                FloatBuffer.wrap(cubeVertices), GL.GL_STATIC_DRAW);
+
+        // activate and initialize index buffer object (IBO)
+        gl.glBindBuffer(GL.GL_ELEMENT_ARRAY_BUFFER, iboName[9]);
+        // integers use 4 bytes in Java
+        gl.glBufferData(GL.GL_ELEMENT_ARRAY_BUFFER, cubeIndices.length * 4,
+                IntBuffer.wrap(cubeIndices), GL.GL_STATIC_DRAW);
+
+        // Activate and order vertex buffer object data for the vertex shader
+        // The vertex buffer contains: position (3), color (3), normals (3)
+        // Defining input for vertex shader
+        // Pointer for the vertex shader to the position information per vertex
+        gl.glEnableVertexAttribArray(0);
+        gl.glVertexAttribPointer(0, 3, GL.GL_FLOAT, false, 9*4, 0);
+        // Pointer for the vertex shader to the color information per vertex
+        gl.glEnableVertexAttribArray(1);
+        gl.glVertexAttribPointer(1, 3, GL.GL_FLOAT, false, 9*4, 3*4);
+        // Pointer for the vertex shader to the normal information per vertex
+        gl.glEnableVertexAttribArray(2);
+        gl.glVertexAttribPointer(2, 3, GL.GL_FLOAT, false, 9*4, 6*4);
+        // END: Prepare cube for drawing
+    }
+
+
+
 
     /**
      * Implementation of the OpenGL EventListener (GLEventListener) method
@@ -356,7 +638,7 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         gl.glClear(GL3.GL_COLOR_BUFFER_BIT | GL3.GL_DEPTH_BUFFER_BIT);
 
         // Background color of the canvas
-        gl.glClearColor(0.97f, 0.97f, 0.97f, 1.0f);
+        gl.glClearColor(0f, 0f, 0f, 0f);
 
         // For monitoring the interaction settings
 /*        System.out.println("Camera: z = " + interactionHandler.getEyeZ() + ", " +
@@ -382,32 +664,576 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         // Position of one light for all shapes
         float[] lightPos = {0f, 3f, 0f};
 
+        //Block lang gerade
         pmvMatrix.glPushMatrix();
-       pmvMatrix.glTranslatef(0f, 0.5f, 0f);
-        displayObject0(gl, lightPos);
+       pmvMatrix.glTranslatef(0f, 0f, 0f);
+        displayObject0(gl);
         pmvMatrix.glPopMatrix();
 
         pmvMatrix.glPushMatrix();
-        pmvMatrix.glTranslatef(-1f, 0.5f, 0f);
+        pmvMatrix.glTranslatef(0.5f, 0f, 0f);
+        displayObject0(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(1f, 0f, 0f);
+        displayObject0(gl);
+        pmvMatrix.glPopMatrix();
+
+
+
+
+        //Block L Links
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(2.5f, 0f, 0f);
         displayObject1(gl);
         pmvMatrix.glPopMatrix();
 
         pmvMatrix.glPushMatrix();
-        pmvMatrix.glTranslatef(1f, 0.5f, 0f);
+        pmvMatrix.glTranslatef(3f, 0f, 0f);
+        displayObject1(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(3.5f, 0f, 0f);
+        displayObject1(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(2.5f, 0.5f, 0f);
+        displayObject1(gl);
+        pmvMatrix.glPopMatrix();
+
+
+
+        //Block L Rechts
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-1f, 0f, 0f);
         displayObject2(gl);
         pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-1.5f, 0f, 0f);
+        displayObject2(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2f, 0f, 0f);
+        displayObject2(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-1f, 0.5f, 0f);
+        displayObject2(gl);
+        pmvMatrix.glPopMatrix();
+
+
+        //Block Quadrat
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2f, -2f, 0f);
+        displayObject3(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2f, -1.5f, 0f);
+        displayObject3(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-1.5f, -2f, 0f);
+        displayObject3(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-1.5f, -1.5f, 0f);
+        displayObject3(gl);
+        pmvMatrix.glPopMatrix();
+
+
+        //Block Podest
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(0f, -2f, 0f);
+        displayObject4(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(0.5f, -2f, 0f);
+        displayObject4(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(1f, -2f, 0f);
+        displayObject4(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(0.5f, -1.5f, 0f);
+        displayObject4(gl);
+        pmvMatrix.glPopMatrix();
+
+
+        //Block Versetzt Rechts
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(2f, -2f, 0f);
+        displayObject5(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(2.5f, -2f, 0f);
+        displayObject5(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(2.5f, -1.5f, 0f);
+        displayObject5(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(3f, -1.5f, 0f);
+        displayObject5(gl);
+        pmvMatrix.glPopMatrix();
+
+
+        //Block Versetzt Links
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(4.5f, -2f, 0f);
+        displayObject6(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(5f, -2f, 0f);
+        displayObject6(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(4.5f, -1.5f, 0f);
+        displayObject6(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(4f, -1.5f, 0f);
+        displayObject6(gl);
+        pmvMatrix.glPopMatrix();
+
+
+        //Spielfeld
+
+
+       //Hinten
+
+        //Reihe 1
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2f, -2f, -0.5f);
+        displayObject7(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-1.5f, -2f, -0.5f);
+        displayObject7(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-1f, -2f, -0.5f);
+        displayObject7(gl);
+        pmvMatrix.glPopMatrix();
+
+
+        //Reihe 2
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2f, -1.5f, -0.5f);
+        displayObject7(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-1.5f, -1.5f, -0.5f);
+        displayObject7(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-1f, -1.5f, -0.5f);
+        displayObject7(gl);
+        pmvMatrix.glPopMatrix();
+
+
+        //Reihe 3
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2f, -1f, -0.5f);
+        displayObject7(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-1.5f, -1f, -0.5f);
+        displayObject7(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-1f, -1f, -0.5f);
+        displayObject7(gl);
+        pmvMatrix.glPopMatrix();
+
+
+        //Reihe 4
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2f, -0.5f, -0.5f);
+        displayObject7(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-1.5f, -0.5f, -0.5f);
+        displayObject7(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-1f, -0.5f, -0.5f);
+        displayObject7(gl);
+        pmvMatrix.glPopMatrix();
+
+
+        //Reihe 5
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2f, 0f, -0.5f);
+        displayObject7(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-1.5f, 0f, -0.5f);
+        displayObject7(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-1f, 0f, -0.5f);
+        displayObject7(gl);
+        pmvMatrix.glPopMatrix();
+
+
+        //Reihe 6
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2f, 0.5f, -0.5f);
+        displayObject7(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-1.5f, 0.5f, -0.5f);
+        displayObject7(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-1f, 0.5f, -0.5f);
+        displayObject7(gl);
+        pmvMatrix.glPopMatrix();
+
+
+        //Reihe 7
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2f, 1f, -0.5f);
+        displayObject7(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-1.5f, 1f, -0.5f);
+        displayObject7(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-1f, 1f, -0.5f);
+        displayObject7(gl);
+        pmvMatrix.glPopMatrix();
+
+
+        //Reihe 8
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2f, 1.5f, -0.5f);
+        displayObject7(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-1.5f, 1.5f, -0.5f);
+        displayObject7(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-1f, 1.5f, -0.5f);
+        displayObject7(gl);
+        pmvMatrix.glPopMatrix();
+
+
+        //Reihe 9
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2f, 2f, -0.5f);
+        displayObject7(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-1.5f, 2f, -0.5f);
+        displayObject7(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-1f, 2f, -0.5f);
+        displayObject7(gl);
+        pmvMatrix.glPopMatrix();
+
+
+        //Reihe 10
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2f, 2.5f, -0.5f);
+        displayObject7(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-1.5f, 2.5f, -0.5f);
+        displayObject7(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-1f, 2.5f, -0.5f);
+        displayObject7(gl);
+        pmvMatrix.glPopMatrix();
+
+
+
+
+        //Seite
+
+        //Reihe 1
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2.25f, -2f, -0.25f);
+        displayObject8(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2.25f, -2f, 0.25f);
+        displayObject8(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2.25f, -2f, 0.75f);
+        displayObject8(gl);
+        pmvMatrix.glPopMatrix();
+
+
+        //Reihe 2
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2.25f, -1.5f, -0.25f);
+        displayObject8(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2.25f, -1.5f, 0.25f);
+        displayObject8(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2.25f, -1.5f, 0.75f);
+        displayObject8(gl);
+        pmvMatrix.glPopMatrix();
+
+
+        //Reihe 3
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2.25f, -1f, -0.25f);
+        displayObject8(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2.25f, -1f, 0.25f);
+        displayObject8(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2.25f, -1f, 0.75f);
+        displayObject8(gl);
+        pmvMatrix.glPopMatrix();
+
+
+        //Reihe 4
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2.25f, -0.5f, -0.25f);
+        displayObject8(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2.25f, -0.5f, 0.25f);
+        displayObject8(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2.25f, -0.5f, 0.75f);
+        displayObject8(gl);
+        pmvMatrix.glPopMatrix();
+
+
+        //Reihe 5
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2.25f, 0f, -0.25f);
+        displayObject8(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2.25f, 0f, 0.25f);
+        displayObject8(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2.25f, 0f, 0.75f);
+        displayObject8(gl);
+        pmvMatrix.glPopMatrix();
+
+
+        //Reihe 6
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2.25f, 0.5f, -0.25f);
+        displayObject8(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2.25f, 0.5f, 0.25f);
+        displayObject8(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2.25f, 0.5f, 0.75f);
+        displayObject8(gl);
+        pmvMatrix.glPopMatrix();
+
+
+        //Reihe 7
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2.25f, 1f, -0.25f);
+        displayObject8(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2.25f, 1f, 0.25f);
+        displayObject8(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2.25f, 1f, 0.75f);
+        displayObject8(gl);
+        pmvMatrix.glPopMatrix();
+
+
+        //Reihe 8
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2.25f, 1.5f, -0.25f);
+        displayObject8(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2.25f, 1.5f, 0.25f);
+        displayObject8(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2.25f, 1.5f, 0.75f);
+        displayObject8(gl);
+        pmvMatrix.glPopMatrix();
+
+
+
+        //Reihe 9
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2.25f, 2f, -0.25f);
+        displayObject8(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2.25f, 2f, 0.25f);
+        displayObject8(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2.25f, 2f, 0.75f);
+        displayObject8(gl);
+        pmvMatrix.glPopMatrix();
+
+
+        //Reihe 10
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2.25f, 2.5f, -0.25f);
+        displayObject8(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2.25f, 2.5f, 0.25f);
+        displayObject8(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2.25f, 2.5f, 0.75f);
+        displayObject8(gl);
+        pmvMatrix.glPopMatrix();
+
+
+
+        //Spielfeld Unten
+        //Reihe 1
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2f, -2.25f, -0.25f);
+        displayObject9(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2f, -2.25f, 0.25f);
+        displayObject9(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-2f, -2.25f, 0.75f);
+        displayObject9(gl);
+        pmvMatrix.glPopMatrix();
+
+        //Reihe 2
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-1.5f, -2.25f, -0.25f);
+        displayObject9(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-1.5f, -2.25f, 0.25f);
+        displayObject9(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-1.5f, -2.25f, 0.75f);
+        displayObject9(gl);
+        pmvMatrix.glPopMatrix();
+
+        //Reihe 3
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-1f, -2.25f, -0.25f);
+        displayObject9(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-1f, -2.25f, 0.25f);
+        displayObject9(gl);
+        pmvMatrix.glPopMatrix();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(-1f, -2.25f, 0.75f);
+        displayObject9(gl);
+        pmvMatrix.glPopMatrix();
+
+
+
+
     }
 
-    private void displayObject0(GL3 gl, float[] lightPos) {
-        gl.glUseProgram(shaderProgram1.getShaderProgramID());
+
+
+
+    //Block lang gerade
+    private void displayObject0(GL3 gl) {
+        gl.glUseProgram(shaderProgram0.getShaderProgramID());
         // Transfer the PVM-Matrix (model-view and projection matrix) to the vertex shader
         gl.glUniformMatrix4fv(0, 1, false, pmvMatrix.glGetPMatrixf());
         gl.glUniformMatrix4fv(1, 1, false, pmvMatrix.glGetMvMatrixf());
-        gl.glBindVertexArray(vaoName[1]);
+        gl.glBindVertexArray(vaoName[0]);
         // Draws the elements in the order defined by the index buffer object (IBO)
         gl.glDrawElements(GL.GL_TRIANGLE_STRIP, Box.noOfIndicesForBox(), GL.GL_UNSIGNED_INT, 0);
     }
-
     private void displayObject1(GL3 gl) {
         gl.glUseProgram(shaderProgram1.getShaderProgramID());
         // Transfer the PVM-Matrix (model-view and projection matrix) to the vertex shader
@@ -422,10 +1248,84 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         // Transfer the PVM-Matrix (model-view and projection matrix) to the vertex shader
         gl.glUniformMatrix4fv(0, 1, false, pmvMatrix.glGetPMatrixf());
         gl.glUniformMatrix4fv(1, 1, false, pmvMatrix.glGetMvMatrixf());
-        gl.glBindVertexArray(vaoName[1]);
+        gl.glBindVertexArray(vaoName[2]);
         // Draws the elements in the order defined by the index buffer object (IBO)
         gl.glDrawElements(GL.GL_TRIANGLE_STRIP, Box.noOfIndicesForBox(), GL.GL_UNSIGNED_INT, 0);
     }
+    private void displayObject3(GL3 gl) {
+        gl.glUseProgram(shaderProgram1.getShaderProgramID());
+        // Transfer the PVM-Matrix (model-view and projection matrix) to the vertex shader
+        gl.glUniformMatrix4fv(0, 1, false, pmvMatrix.glGetPMatrixf());
+        gl.glUniformMatrix4fv(1, 1, false, pmvMatrix.glGetMvMatrixf());
+        gl.glBindVertexArray(vaoName[3]);
+        // Draws the elements in the order defined by the index buffer object (IBO)
+        gl.glDrawElements(GL.GL_TRIANGLE_STRIP, Box.noOfIndicesForBox(), GL.GL_UNSIGNED_INT, 0);
+    }
+
+
+    //Block L Links
+    private void displayObject4(GL3 gl) {
+        gl.glUseProgram(shaderProgram1.getShaderProgramID());
+        // Transfer the PVM-Matrix (model-view and projection matrix) to the vertex shader
+        gl.glUniformMatrix4fv(0, 1, false, pmvMatrix.glGetPMatrixf());
+        gl.glUniformMatrix4fv(1, 1, false, pmvMatrix.glGetMvMatrixf());
+        gl.glBindVertexArray(vaoName[4]);
+        // Draws the elements in the order defined by the index buffer object (IBO)
+        gl.glDrawElements(GL.GL_TRIANGLE_STRIP, Box.noOfIndicesForBox(), GL.GL_UNSIGNED_INT, 0);
+    }
+    private void displayObject5(GL3 gl) {
+        gl.glUseProgram(shaderProgram1.getShaderProgramID());
+        // Transfer the PVM-Matrix (model-view and projection matrix) to the vertex shader
+        gl.glUniformMatrix4fv(0, 1, false, pmvMatrix.glGetPMatrixf());
+        gl.glUniformMatrix4fv(1, 1, false, pmvMatrix.glGetMvMatrixf());
+        gl.glBindVertexArray(vaoName[5]);
+        // Draws the elements in the order defined by the index buffer object (IBO)
+        gl.glDrawElements(GL.GL_TRIANGLE_STRIP, Box.noOfIndicesForBox(), GL.GL_UNSIGNED_INT, 0);
+    }
+    private void displayObject6(GL3 gl) {
+        gl.glUseProgram(shaderProgram1.getShaderProgramID());
+        // Transfer the PVM-Matrix (model-view and projection matrix) to the vertex shader
+        gl.glUniformMatrix4fv(0, 1, false, pmvMatrix.glGetPMatrixf());
+        gl.glUniformMatrix4fv(1, 1, false, pmvMatrix.glGetMvMatrixf());
+        gl.glBindVertexArray(vaoName[6]);
+        // Draws the elements in the order defined by the index buffer object (IBO)
+        gl.glDrawElements(GL.GL_TRIANGLE_STRIP, Box.noOfIndicesForBox(), GL.GL_UNSIGNED_INT, 0);
+    }
+
+
+    //Spielfeld
+    //Spielfeld hinten
+    private void displayObject7(GL3 gl) {
+        gl.glUseProgram(shaderProgram1.getShaderProgramID());
+        // Transfer the PVM-Matrix (model-view and projection matrix) to the vertex shader
+        gl.glUniformMatrix4fv(0, 1, false, pmvMatrix.glGetPMatrixf());
+        gl.glUniformMatrix4fv(1, 1, false, pmvMatrix.glGetMvMatrixf());
+        gl.glBindVertexArray(vaoName[7]);
+        // Draws the elements in the order defined by the index buffer object (IBO)
+        gl.glDrawElements(GL.GL_TRIANGLE_STRIP, Box.noOfIndicesForBox(), GL.GL_UNSIGNED_INT, 0);
+    }
+    //Spielfeld links
+    private void displayObject8(GL3 gl) {
+        gl.glUseProgram(shaderProgram1.getShaderProgramID());
+        // Transfer the PVM-Matrix (model-view and projection matrix) to the vertex shader
+        gl.glUniformMatrix4fv(0, 1, false, pmvMatrix.glGetPMatrixf());
+        gl.glUniformMatrix4fv(1, 1, false, pmvMatrix.glGetMvMatrixf());
+        gl.glBindVertexArray(vaoName[8]);
+        // Draws the elements in the order defined by the index buffer object (IBO)
+        gl.glDrawElements(GL.GL_TRIANGLE_STRIP, Box.noOfIndicesForBox(), GL.GL_UNSIGNED_INT, 0);
+    }
+    //Spielfeld unten
+    private void displayObject9(GL3 gl) {
+        gl.glUseProgram(shaderProgram1.getShaderProgramID());
+        // Transfer the PVM-Matrix (model-view and projection matrix) to the vertex shader
+        gl.glUniformMatrix4fv(0, 1, false, pmvMatrix.glGetPMatrixf());
+        gl.glUniformMatrix4fv(1, 1, false, pmvMatrix.glGetMvMatrixf());
+        gl.glBindVertexArray(vaoName[9]);
+        // Draws the elements in the order defined by the index buffer object (IBO)
+        gl.glDrawElements(GL.GL_TRIANGLE_STRIP, Box.noOfIndicesForBox(), GL.GL_UNSIGNED_INT, 0);
+    }
+
+
 
     /**
      * Implementation of the OpenGL EventListener (GLEventListener) method
@@ -473,3 +1373,5 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         System.exit(0);
     }
 }
+
+

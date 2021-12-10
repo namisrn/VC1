@@ -30,7 +30,7 @@ public class BufferedImagePanel extends JComponent {
      */
     public BufferedImagePanel()
     {
-        width = 640;    // arbitrary size for empty panel
+        width = 720;    // arbitrary size for empty panel
         height = 480;
         panelImage = null;
     }

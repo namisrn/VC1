@@ -77,7 +77,7 @@ public class VideoProcessing extends JFrame{
         Mat lines = new Mat();
         Mat dst = new Mat();
         Mat hsv = new Mat();
-        Mat test = new Mat();
+        Mat shape = new Mat();
         Mat testContours = new Mat();
         List<MatOfPoint> contours = new ArrayList<>();
 
@@ -108,7 +108,7 @@ public class VideoProcessing extends JFrame{
 
             //h = hue, s = saturation,v = value
             Core.inRange(hsv, new Scalar(36, 0, 60), new Scalar(134, 120, 178), hsv); //for light green
-            //Core.inRange(hsv, new Scalar(9, 215, 255 ), new Scalar(9,255,255), hsv); //for red
+            //Core.inRange(hsv, new Scalar(9, 215, 255), new Scalar(9,255,255), hsv); //for red
             //Core.inRange(hsv, new Scalar(70,80,255), new Scalar(70,255,255), hsv); //for yellow
 
 
@@ -136,27 +136,28 @@ public class VideoProcessing extends JFrame{
                 pt2.y = Math.round(y0 - 1000 *(a));
                 Imgproc.line(edges, pt1, pt2, new Scalar(0, 0, 255));*/
 
-            //Testing shape detection
-            Imgproc.cvtColor(frame, test, Imgproc.COLOR_RGB2GRAY);
-            //Blur
-            Imgproc.medianBlur(test, test, 19);
+            /*Testing shape detection*/
 
             //cvt RGB to HSV color space
-            //add in Range Methode for Color detection
+            Imgproc.cvtColor(frame, shape, Imgproc.COLOR_RGB2HSV);
+            //Blur
+            Imgproc.medianBlur(shape, shape, 11);
+
+            //Optimization saturation for color detection, goal: red, current blue
+            Core.inRange(shape, new Scalar(80, 100, 10), new Scalar(120, 255, 255), shape);
 
             //Threshold need to be adjust
-            Imgproc.threshold(test, test, 150, 255, Imgproc.THRESH_BINARY);
+            //Imgproc.threshold(shape, shape, 80, 255, Imgproc.THRESH_BINARY);
 
             //Erode source image
-            Imgproc.erode(test, test, new Mat(), new Point(-1,-1),1 );
+            Imgproc.erode(shape, shape, new Mat(), new Point(-1,-1),1 );
 
             //Dilates source image by using a specific structuring element
-            Imgproc.dilate(test, test, new Mat(), new Point(-1,-1),1);
+            Imgproc.dilate(shape, shape, new Mat(), new Point(-1,-1),1);
 
 
-
-            //Find contours
-            Imgproc.findContours(test, contours, testContours, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+            //Find contours, save information of white object in contours as arraylist
+            Imgproc.findContours(shape, contours, testContours, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
 
             //convert contours to a MatOfPoint2f object
             List<MatOfPoint2f> newContours = new ArrayList<>();
@@ -168,11 +169,13 @@ public class VideoProcessing extends JFrame{
             //loop through possibilities
             for (int idx = 0; idx < contours.size(); idx++) {
                 MatOfPoint2f approx = new MatOfPoint2f();
+                //allows the approximation of polygons and determine scope of object
                 Imgproc.approxPolyDP(newContours.get(idx), approx, Imgproc.arcLength(newContours.get(idx), true) * 0.02, true);
                 long count = approx.total();
+                //filtering small blobs
                 if(Math.abs(Imgproc.contourArea(contours.get(idx))) > 1000) {
 
-
+                    //draw contours on objects
                     if (count == 5) {
                         Imgproc.drawContours(frame, contours, idx, new Scalar(75, 0, 0));
                     }
@@ -188,8 +191,8 @@ public class VideoProcessing extends JFrame{
                 }
             }
 
-            //use the right matrix for certain function, mat or test
-            panel1.setImage(Mat2BufferedImage(test));
+            //use the right matrix for certain function, mat or shape
+            panel1.setImage(Mat2BufferedImage(shape));
             contours.clear();
 
         } //end of loop

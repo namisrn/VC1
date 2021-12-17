@@ -27,18 +27,24 @@
  */
 
 
-import java.awt.Dimension;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
-import javax.swing.*;
-
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.FPSAnimator;
 import org.opencv.core.Core;
-import videoCapture.VideoProcessing;
+import org.opencv.core.Mat;
+import org.opencv.core.Size;
+import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
+import org.opencv.videoio.VideoCapture;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+
+import static org.opencv.imgproc.Imgproc.INTER_AREA;
 
 /**
  * Top-level class of the application displaying the OpenGL component.
@@ -65,6 +71,8 @@ public class BoxLightTexMainWindowPP extends JFrame {
     private static final int CANVAS_WIDTH = 800;  // width of the drawable
     private static final int CANVAS_HEIGHT = 600; // height of the drawable
     private static final int FPS = 60; // animator's target frames per second
+
+    static{ System.loadLibrary(Core.NATIVE_LIBRARY_NAME);}
 
     public BoxLightTexMainWindowPP() {
         // Setup an OpenGL context for the Canvas
@@ -132,7 +140,9 @@ public class BoxLightTexMainWindowPP extends JFrame {
 
         //Initiate OPENCV window
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        new VideoProcessing();
+        VideoCapture capture = new VideoCapture(0);
+        Mat matrix = new Mat();
+        capture.read(matrix);
     }
 }
 

@@ -31,11 +31,15 @@ import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.PMVMatrix;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
+import de.hshl.obj.loader.OBJLoader;
+import de.hshl.obj.loader.Resource;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static com.jogamp.opengl.GL.GL_TEXTURE0;
 import static com.jogamp.opengl.GL.GL_TEXTURE_2D;
@@ -80,6 +84,20 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
     private final String vertexShader1FileName = "O1_Basic.vert";
     private final String fragmentShader1FileName = "O1_Basic.frag";
 
+    private final String vertexShader2FileName = "O0_Basic.vert";
+    private final String fragmentShader2FileName = "O0_Basic.frag";
+
+    private static final Path objFile = Paths.get("./resources/models/gerade.obj");
+    private static final Path objFile1 = Paths.get("./resources/models/L_Links.obj");
+    private static final Path objFile2 = Paths.get("./resources/models/Quadrat.obj");
+    private static final Path objFile3 = Paths.get("./resources/models/podest.obj");
+
+
+    float [] verticies;
+    float [] verticies1;
+    float [] verticies2;
+    float [] verticies3;
+
 
     // taking texture files from relative path
     private final String texturePath = ".\\resources\\";
@@ -89,12 +107,15 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
 
     private ShaderProgram shaderProgram0;
     private ShaderProgram shaderProgram1;
+    private ShaderProgram shaderProgram2;
 
     // Pointers (names) for data transfer and handling on GPU
     private int[] vaoName;  // Name of vertex array object
     private int[] vboName;	// Name of vertex buffer object
     private int[] iboName;	// Name of index buffer object
 
+    float block1 = 0f;
+    float direction = 0.01f;
 
 
     // Define Materials
@@ -169,17 +190,17 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
 
         // BEGIN: Preparing scene
         // BEGIN: Allocating vertex array objects and buffers for each object
-        int noOfObjects = 28;
+        int noOfObjects = 32;
         // create vertex array objects for noOfObjects objects (VAO)
         vaoName = new int[noOfObjects];
         gl.glGenVertexArrays(noOfObjects, vaoName, 0);
-        if (vaoName[0] < 27)
+        if (vaoName[0] < 31)
             System.err.println("Error allocating vertex array object (VAO).");
 
         // create vertex buffer objects for noOfObjects objects (VBO)
         vboName = new int[noOfObjects];
         gl.glGenBuffers(noOfObjects, vboName, 0);
-        if (vboName[0] < 27)
+        if (vboName[0] < 31)
             System.err.println("Error allocating vertex buffer object (VBO).");
 
         // create index buffer objects for noOfObjects objects (IBO)
@@ -190,16 +211,20 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         // END: Allocating vertex array objects and buffers for each object
 
         // Initialize objects to be drawn (see respective sub-methods)
-        initObject0(gl);
-        initObject1(gl);
-        initObject2(gl);
-        initObject3(gl);
-        initObject4(gl);
-        initObject5(gl);
-        initObject6(gl);
+        //initObject0(gl);
+        //initObject1(gl);
+        //initObject2(gl);
+        //initObject3(gl);
+        //initObject4(gl);
+        //initObject5(gl);
+        //initObject6(gl);
         initObject7(gl);
         initObject8(gl);
         initObject9(gl);
+        initblock1(gl);
+        initblock2(gl);
+        initblock3(gl);
+        initblock4(gl);
 
 
         // Specify light parameters
@@ -228,6 +253,178 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         // Start parameter settings for the interaction handler might be called here
         interactionHandler.setEyeZ(11);
         // END: Preparing scene
+    }
+
+    public void initblock1 (GL3 gl){
+        // Loading the vertex and fragment shaders and creation of the shader program.
+        gl.glBindVertexArray(vaoName[28]);
+        shaderProgram2 = new ShaderProgram(gl);
+        shaderProgram2.loadShaderAndCreateProgram(shaderPath,
+                vertexShader2FileName, fragmentShader2FileName);
+
+        float[] color2 = {0.5f, 0.2f, 0.5f};
+        float[] cubeVertices = Box.makeBoxVertices(0.5f, 0.5f, 0.4f, color2);
+
+        // Create object for projection-model-view matrix calculation.
+        pmvMatrix = new PMVMatrix();
+
+        // Vertices for drawing a triangle.
+        // To be transferred to a vertex buffer object on the GPU.
+        // Interleaved data layout: position, color
+        try {
+            verticies = new OBJLoader()
+                    .setLoadNormals(true) // tell the loader to also load normal data
+                    .loadMesh(Resource.file(objFile)) // actually load the file
+                    .getVertices(); // take the vertices from the loaded mesh
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e); }
+// Activating this buffer as vertex buffer object.
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vboName[28]);
+        // Transferring the vertex data (see above) to the VBO on GPU.
+        // (floats use 4 bytes in Java)
+        gl.glBufferData(GL.GL_ARRAY_BUFFER, verticies.length * Float.BYTES,
+                FloatBuffer.wrap(verticies), GL.GL_STATIC_DRAW);
+
+        // Activate and map input for the vertex shader from VBO,
+        // taking care of interleaved layout of vertex data (position and color),
+        // Enable layout position 0
+        gl.glEnableVertexAttribArray(0);
+        // Map layout position 0 to the position information per vertex in the VBO.
+        gl.glVertexAttribPointer(0, 3, GL.GL_FLOAT, false, 6* Float.BYTES, 0);
+        // Enable layout position 1
+        gl.glEnableVertexAttribArray(1);
+        // Map layout position 1 to the color information per vertex in the VBO.
+        gl.glVertexAttribPointer(1, 3, GL.GL_FLOAT, false, 6* Float.BYTES, 3* Float.BYTES);
+    }
+
+    public void initblock2 (GL3 gl){
+        // Loading the vertex and fragment shaders and creation of the shader program.
+        gl.glBindVertexArray(vaoName[29]);
+        shaderProgram2 = new ShaderProgram(gl);
+        shaderProgram2.loadShaderAndCreateProgram(shaderPath,
+                vertexShader2FileName, fragmentShader2FileName);
+
+        float[] color2 = {0.5f, 0.2f, 0.5f};
+        float[] cubeVertices = Box.makeBoxVertices(0.5f, 0.5f, 0.4f, color2);
+
+        // Create object for projection-model-view matrix calculation.
+        pmvMatrix = new PMVMatrix();
+
+        // Vertices for drawing a triangle.
+        // To be transferred to a vertex buffer object on the GPU.
+        // Interleaved data layout: position, color
+        try {
+            verticies1 = new OBJLoader()
+                    .setLoadNormals(true) // tell the loader to also load normal data
+                    .loadMesh(Resource.file(objFile1)) // actually load the file
+                    .getVertices(); // take the vertices from the loaded mesh
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e); }
+// Activating this buffer as vertex buffer object.
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vboName[29]);
+        // Transferring the vertex data (see above) to the VBO on GPU.
+        // (floats use 4 bytes in Java)
+        gl.glBufferData(GL.GL_ARRAY_BUFFER, verticies1.length * Float.BYTES,
+                FloatBuffer.wrap(verticies1), GL.GL_STATIC_DRAW);
+
+        // Activate and map input for the vertex shader from VBO,
+        // taking care of interleaved layout of vertex data (position and color),
+        // Enable layout position 0
+        gl.glEnableVertexAttribArray(0);
+        // Map layout position 0 to the position information per vertex in the VBO.
+        gl.glVertexAttribPointer(0, 3, GL.GL_FLOAT, false, 6* Float.BYTES, 0);
+        // Enable layout position 1
+        gl.glEnableVertexAttribArray(1);
+        // Map layout position 1 to the color information per vertex in the VBO.
+        gl.glVertexAttribPointer(1, 3, GL.GL_FLOAT, false, 6* Float.BYTES, 3* Float.BYTES);
+    }
+
+    public void initblock3 (GL3 gl){
+        // Loading the vertex and fragment shaders and creation of the shader program.
+        gl.glBindVertexArray(vaoName[30]);
+        shaderProgram2 = new ShaderProgram(gl);
+        shaderProgram2.loadShaderAndCreateProgram(shaderPath,
+                vertexShader2FileName, fragmentShader2FileName);
+
+        float[] color2 = {0.5f, 0.2f, 0.5f};
+        float[] cubeVertices = Box.makeBoxVertices(0.5f, 0.5f, 0.4f, color2);
+
+        // Create object for projection-model-view matrix calculation.
+        pmvMatrix = new PMVMatrix();
+
+        // Vertices for drawing a triangle.
+        // To be transferred to a vertex buffer object on the GPU.
+        // Interleaved data layout: position, color
+        try {
+            verticies2 = new OBJLoader()
+                    .setLoadNormals(true) // tell the loader to also load normal data
+                    .loadMesh(Resource.file(objFile2)) // actually load the file
+                    .getVertices(); // take the vertices from the loaded mesh
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e); }
+// Activating this buffer as vertex buffer object.
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vboName[30]);
+        // Transferring the vertex data (see above) to the VBO on GPU.
+        // (floats use 4 bytes in Java)
+        gl.glBufferData(GL.GL_ARRAY_BUFFER, verticies2.length * Float.BYTES,
+                FloatBuffer.wrap(verticies2), GL.GL_STATIC_DRAW);
+
+        // Activate and map input for the vertex shader from VBO,
+        // taking care of interleaved layout of vertex data (position and color),
+        // Enable layout position 0
+        gl.glEnableVertexAttribArray(0);
+        // Map layout position 0 to the position information per vertex in the VBO.
+        gl.glVertexAttribPointer(0, 3, GL.GL_FLOAT, false, 6* Float.BYTES, 0);
+        // Enable layout position 1
+        gl.glEnableVertexAttribArray(1);
+        // Map layout position 1 to the color information per vertex in the VBO.
+        gl.glVertexAttribPointer(1, 3, GL.GL_FLOAT, false, 6* Float.BYTES, 3* Float.BYTES);
+    }
+
+    public void initblock4 (GL3 gl){
+        // Loading the vertex and fragment shaders and creation of the shader program.
+        gl.glBindVertexArray(vaoName[31]);
+        shaderProgram2 = new ShaderProgram(gl);
+        shaderProgram2.loadShaderAndCreateProgram(shaderPath,
+                vertexShader2FileName, fragmentShader2FileName);
+
+        float[] color2 = {0.5f, 0.2f, 0.5f};
+        float[] cubeVertices = Box.makeBoxVertices(0.5f, 0.5f, 0.4f, color2);
+
+        // Create object for projection-model-view matrix calculation.
+        pmvMatrix = new PMVMatrix();
+
+        // Vertices for drawing a triangle.
+        // To be transferred to a vertex buffer object on the GPU.
+        // Interleaved data layout: position, color
+        try {
+            verticies3 = new OBJLoader()
+                    .setLoadNormals(true) // tell the loader to also load normal data
+                    .loadMesh(Resource.file(objFile3)) // actually load the file
+                    .getVertices(); // take the vertices from the loaded mesh
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e); }
+// Activating this buffer as vertex buffer object.
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vboName[31]);
+        // Transferring the vertex data (see above) to the VBO on GPU.
+        // (floats use 4 bytes in Java)
+        gl.glBufferData(GL.GL_ARRAY_BUFFER, verticies3.length * Float.BYTES,
+                FloatBuffer.wrap(verticies3), GL.GL_STATIC_DRAW);
+
+        // Activate and map input for the vertex shader from VBO,
+        // taking care of interleaved layout of vertex data (position and color),
+        // Enable layout position 0
+        gl.glEnableVertexAttribArray(0);
+        // Map layout position 0 to the position information per vertex in the VBO.
+        gl.glVertexAttribPointer(0, 3, GL.GL_FLOAT, false, 6* Float.BYTES, 0);
+        // Enable layout position 1
+        gl.glEnableVertexAttribArray(1);
+        // Map layout position 1 to the color information per vertex in the VBO.
+        gl.glVertexAttribPointer(1, 3, GL.GL_FLOAT, false, 6* Float.BYTES, 3* Float.BYTES);
     }
 
     /**
@@ -664,7 +861,7 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         // Position of one light for all shapes
         float[] lightPos = {0f, 3f, 0f};
 
-        //Block lang gerade
+        /*Block lang gerade
         pmvMatrix.glPushMatrix();
        pmvMatrix.glTranslatef(0f, 0f, 0f);
         displayObject0(gl);
@@ -678,12 +875,12 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         pmvMatrix.glPushMatrix();
         pmvMatrix.glTranslatef(1f, 0f, 0f);
         displayObject0(gl);
-        pmvMatrix.glPopMatrix();
+        pmvMatrix.glPopMatrix();*/
 
 
 
 
-        //Block L Links
+        /*Block L Links
         pmvMatrix.glPushMatrix();
         pmvMatrix.glTranslatef(2.5f, 0f, 0f);
         displayObject1(gl);
@@ -702,11 +899,11 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         pmvMatrix.glPushMatrix();
         pmvMatrix.glTranslatef(2.5f, 0.5f, 0f);
         displayObject1(gl);
-        pmvMatrix.glPopMatrix();
+        pmvMatrix.glPopMatrix();*/
 
 
 
-        //Block L Rechts
+        /*Block L Rechts
         pmvMatrix.glPushMatrix();
         pmvMatrix.glTranslatef(-1f, 0f, 0f);
         displayObject2(gl);
@@ -725,32 +922,44 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         pmvMatrix.glPushMatrix();
         pmvMatrix.glTranslatef(-1f, 0.5f, 0f);
         displayObject2(gl);
-        pmvMatrix.glPopMatrix();
+        pmvMatrix.glPopMatrix();*/
 
 
-        //Block Quadrat
+        /*Block Quadrat
         pmvMatrix.glPushMatrix();
-        pmvMatrix.glTranslatef(-2f, -2f, 0f);
+        pmvMatrix.glTranslatef(-2f, blockY, 0f);
         displayObject3(gl);
         pmvMatrix.glPopMatrix();
 
         pmvMatrix.glPushMatrix();
-        pmvMatrix.glTranslatef(-2f, -1.5f, 0f);
+        pmvMatrix.glTranslatef(-2f, blockX, 0f);
         displayObject3(gl);
         pmvMatrix.glPopMatrix();
 
         pmvMatrix.glPushMatrix();
-        pmvMatrix.glTranslatef(-1.5f, -2f, 0f);
+        pmvMatrix.glTranslatef(-1.5f, blockY, 0f);
         displayObject3(gl);
         pmvMatrix.glPopMatrix();
 
         pmvMatrix.glPushMatrix();
-        pmvMatrix.glTranslatef(-1.5f, -1.5f, 0f);
+        pmvMatrix.glTranslatef(-1.5f, blockX, 0f);
         displayObject3(gl);
         pmvMatrix.glPopMatrix();
 
+        if (blockX>= -1.5){
 
-        //Block Podest
+            blockX = blockX - direction;
+
+        }
+
+        if (blockY >= -2){
+
+            blockY= blockY -direction;
+        }*/
+
+
+
+        /*Block Podest
         pmvMatrix.glPushMatrix();
         pmvMatrix.glTranslatef(0f, -2f, 0f);
         displayObject4(gl);
@@ -769,10 +978,10 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         pmvMatrix.glPushMatrix();
         pmvMatrix.glTranslatef(0.5f, -1.5f, 0f);
         displayObject4(gl);
-        pmvMatrix.glPopMatrix();
+        pmvMatrix.glPopMatrix();*/
 
 
-        //Block Versetzt Rechts
+        /*Block Versetzt Rechts
         pmvMatrix.glPushMatrix();
         pmvMatrix.glTranslatef(2f, -2f, 0f);
         displayObject5(gl);
@@ -791,10 +1000,10 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         pmvMatrix.glPushMatrix();
         pmvMatrix.glTranslatef(3f, -1.5f, 0f);
         displayObject5(gl);
-        pmvMatrix.glPopMatrix();
+        pmvMatrix.glPopMatrix();*/
 
 
-        //Block Versetzt Links
+        /*Block Versetzt Links
         pmvMatrix.glPushMatrix();
         pmvMatrix.glTranslatef(4.5f, -2f, 0f);
         displayObject6(gl);
@@ -813,7 +1022,45 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         pmvMatrix.glPushMatrix();
         pmvMatrix.glTranslatef(4f, -1.5f, 0f);
         displayObject6(gl);
+        pmvMatrix.glPopMatrix();*/
+
+        //Block 1
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(0.25f, block1, -0.25f);
+        displayBlock1(gl);
         pmvMatrix.glPopMatrix();
+
+        if (block1>= -3.83){
+
+            block1 = block1 - direction;
+
+        }
+
+        //Block 2
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(0.25f, 0f, 0f);
+        displayBlock2(gl);
+        pmvMatrix.glPopMatrix();
+
+        if (block1>= -3.83){
+
+            block1 = block1 - direction;
+
+        }
+
+        //Block 3
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(0.25f, 0f, 0f);
+        displayBlock3(gl);
+        pmvMatrix.glPopMatrix();
+
+        //Block 4
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(0.25f, 0f, -1f);
+        displayBlock4(gl);
+        pmvMatrix.glPopMatrix();
+
+
 
 
         //Spielfeld
@@ -989,6 +1236,9 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         pmvMatrix.glTranslatef(-1f, 2.5f, -0.5f);
         displayObject7(gl);
         pmvMatrix.glPopMatrix();
+
+
+
 
 
 
@@ -1290,6 +1540,46 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         gl.glBindVertexArray(vaoName[6]);
         // Draws the elements in the order defined by the index buffer object (IBO)
         gl.glDrawElements(GL.GL_TRIANGLE_STRIP, Box.noOfIndicesForBox(), GL.GL_UNSIGNED_INT, 0);
+    }
+
+    private void displayBlock1(GL3 gl){
+        gl.glUseProgram(shaderProgram2.getShaderProgramID());
+        // Transfer the PVM-Matrix (model-view and projection matrix) to the vertex shader
+        gl.glUniformMatrix4fv(0, 1, false, pmvMatrix.glGetPMatrixf());
+        gl.glUniformMatrix4fv(1, 1, false, pmvMatrix.glGetMvMatrixf());
+        gl.glBindVertexArray(vaoName[28]);
+        // Draws the elements in the order defined by the index buffer object (IBO)
+        gl.glDrawArrays(GL.GL_TRIANGLES, 0, verticies.length);
+    }
+
+    private void displayBlock2(GL3 gl){
+        gl.glUseProgram(shaderProgram2.getShaderProgramID());
+        // Transfer the PVM-Matrix (model-view and projection matrix) to the vertex shader
+        gl.glUniformMatrix4fv(0, 1, false, pmvMatrix.glGetPMatrixf());
+        gl.glUniformMatrix4fv(1, 1, false, pmvMatrix.glGetMvMatrixf());
+        gl.glBindVertexArray(vaoName[29]);
+        // Draws the elements in the order defined by the index buffer object (IBO)
+        gl.glDrawArrays(GL.GL_TRIANGLES, 0, verticies1.length);
+    }
+
+    private void displayBlock3(GL3 gl){
+        gl.glUseProgram(shaderProgram2.getShaderProgramID());
+        // Transfer the PVM-Matrix (model-view and projection matrix) to the vertex shader
+        gl.glUniformMatrix4fv(0, 1, false, pmvMatrix.glGetPMatrixf());
+        gl.glUniformMatrix4fv(1, 1, false, pmvMatrix.glGetMvMatrixf());
+        gl.glBindVertexArray(vaoName[30]);
+        // Draws the elements in the order defined by the index buffer object (IBO)
+        gl.glDrawArrays(GL.GL_TRIANGLES, 0, verticies2.length);
+    }
+
+    private void displayBlock4(GL3 gl){
+        gl.glUseProgram(shaderProgram2.getShaderProgramID());
+        // Transfer the PVM-Matrix (model-view and projection matrix) to the vertex shader
+        gl.glUniformMatrix4fv(0, 1, false, pmvMatrix.glGetPMatrixf());
+        gl.glUniformMatrix4fv(1, 1, false, pmvMatrix.glGetMvMatrixf());
+        gl.glBindVertexArray(vaoName[31]);
+        // Draws the elements in the order defined by the index buffer object (IBO)
+        gl.glDrawArrays(GL.GL_TRIANGLES, 0, verticies3.length);
     }
 
 

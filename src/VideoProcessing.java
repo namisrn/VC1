@@ -1,24 +1,15 @@
-package videoCapture;
-
-import jdk.jshell.ImportSnippet;
 import org.opencv.core.*;
-import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
 import org.opencv.videoio.Videoio;
 import org.opencv.core.Point;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
-import java.awt.image.ImageProducer;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
 public class VideoProcessing extends JFrame{
     private double thresholdMin = 5;
@@ -113,7 +104,7 @@ public class VideoProcessing extends JFrame{
 
 
             //medianBlur, aperture linear size, odd number
-            Imgproc.medianBlur(hsv, hsv, 19);
+            Imgproc.medianBlur(hsv, hsv, 11);
 
             //detecting edges
             Imgproc.Canny(edges, edges, thresholdMin, thresholdMin * 30, 3);
@@ -168,7 +159,7 @@ public class VideoProcessing extends JFrame{
 
             //loop through possibilities
             for (int idx = 0; idx < contours.size(); idx++) {
-                MatOfPoint2f approx = new MatOfPoint2f();
+                MatOfPoint2f approx = new MatOfPoint2f(); //approx parameter count contours of objects; important for interaction handling
                 //allows the approximation of polygons and determine scope of object
                 Imgproc.approxPolyDP(newContours.get(idx), approx, Imgproc.arcLength(newContours.get(idx), true) * 0.02, true);
                 long count = approx.total();

@@ -9,37 +9,15 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="JOGL" level="project" />
     <orderEntry type="library" exported="" name="gluegen-rt" level="application" />
-    <orderEntry type="module-library">
+    <orderEntry type="library" exported="" name="opencv-454" level="project" />
+    <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://C:/Program Files/Java/jogamp-all-platforms/jar/gluegen-rt.jar!/" />
+          <root url="jar://$MODULE_DIR$/../ObjLoader/OBJLoader-3.0.0.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://C:/Program Files/Java/jogamp-all-platforms/jar/jogl-all.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="library" name="OBJLoader-3.0.0" level="project" />
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://C:/opencv/build/java/opencv-454.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <NATIVE>
-          <root url="file://C:/opencv/build/java/x64" />
-        </NATIVE>
         <SOURCES>
-          <root url="jar://C:/opencv/build/java/opencv-454.jar!/" />
-          <root url="jar://C:/opencv/build/java/opencv-454.jar!/" />
+          <root url="jar://$MODULE_DIR$/../ObjLoader/OBJLoader-3.0.0.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>

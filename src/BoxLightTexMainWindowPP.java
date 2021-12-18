@@ -140,9 +140,10 @@ public class BoxLightTexMainWindowPP extends JFrame {
 
         //Initiate OPENCV window
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        VideoCapture capture = new VideoCapture(0);
-        Mat matrix = new Mat();
-        capture.read(matrix);
+        //VideoCapture capture = new VideoCapture(0);
+        //Mat matrix = new Mat();
+        //capture.read(matrix);
+        new VideoProcessing();
     }
 }
 

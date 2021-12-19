@@ -98,13 +98,13 @@ public class VideoProcessing extends JFrame{
 
 
             //h = hue, s = saturation,v = value
-            Core.inRange(hsv, new Scalar(36, 0, 60), new Scalar(134, 120, 178), hsv); //for light green
-            //Core.inRange(hsv, new Scalar(9, 215, 255), new Scalar(9,255,255), hsv); //for red
+            //Core.inRange(hsv, new Scalar(36, 0, 60), new Scalar(134, 120, 178), hsv); //for light green
+            Core.inRange(hsv, new Scalar(0, 180, 0), new Scalar(50,255,255), hsv); //for red
             //Core.inRange(hsv, new Scalar(70,80,255), new Scalar(70,255,255), hsv); //for yellow
 
 
             //medianBlur, aperture linear size, odd number
-            Imgproc.medianBlur(hsv, hsv, 11);
+            Imgproc.medianBlur(hsv, hsv, 19);
 
             //detecting edges
             Imgproc.Canny(edges, edges, thresholdMin, thresholdMin * 30, 3);
@@ -132,10 +132,10 @@ public class VideoProcessing extends JFrame{
             //cvt RGB to HSV color space
             Imgproc.cvtColor(frame, shape, Imgproc.COLOR_RGB2HSV);
             //Blur
-            Imgproc.medianBlur(shape, shape, 11);
+            Imgproc.medianBlur(shape, shape, 5);
 
-            //Optimization saturation for color detection, goal: red, current blue
-            Core.inRange(shape, new Scalar(80, 100, 10), new Scalar(120, 255, 255), shape);
+            //Optimization saturation for color detection, goal: red
+            Core.inRange(shape, new Scalar(0, 170, 0), new Scalar(120, 255, 255), shape);
 
             //Threshold need to be adjust
             //Imgproc.threshold(shape, shape, 80, 255, Imgproc.THRESH_BINARY);

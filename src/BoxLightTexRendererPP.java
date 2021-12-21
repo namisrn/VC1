@@ -590,6 +590,11 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
      * @param gl OpenGL context
      */
 
+    /*
+    Die nachfolgenden Zeilen (598-871) waren unsere erste version um Spielsteine zu erstellen
+      diese wurden durch den Objektloader abgelöst, sind jedoch noch zu Dokumentationszwecken in dem
+      Quellcode vorhanden
+
    //BLock Lang gerade
     private void initObject0(GL3 gl) {
         // BEGIN: Prepare cube for drawing (object 1)
@@ -862,6 +867,9 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         gl.glVertexAttribPointer(2, 3, GL.GL_FLOAT, false, 9*4, 6*4);
         // END: Prepare cube for drawing
     }
+    */
+
+    //initObject7 - initObject9 = Blöcke für das Spielfeld
     private void initObject7(GL3 gl) {
         // BEGIN: Prepare cube for drawing (object 1)
         gl.glBindVertexArray(vaoName[7]);
@@ -1014,6 +1022,9 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         // Position of one light for all shapes
         float[] lightPos = {0f, 3f, 0f};
 
+        /* Die nachfolgenden Zeilen (1015-1214) waren unsere erste version um Spielsteine zu erstellen
+      diese wurden durch den Objektloader abgelöst, sind jedoch noch zu Dokumentationszwecken in dem
+      Quellcode vorhanden
         /*Block lang gerade
         pmvMatrix.glPushMatrix();
        pmvMatrix.glTranslatef(0f, 0f, 0f);
@@ -1220,7 +1231,7 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         //Spielfeld
 
 
-       //Hinten
+       //Rückseite des Spielfelds wird erstellt
 
         //Reihe 1
         pmvMatrix.glPushMatrix();
@@ -1397,7 +1408,7 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
 
 
 
-        //Seite
+        //Seite des Spielfelds wird erstellt
 
         //Reihe 1
         pmvMatrix.glPushMatrix();
@@ -1571,7 +1582,7 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
 
 
 
-        //Spielfeld Unten
+        //Boden des Spielfelds wird erstellt
         //Reihe 1
         pmvMatrix.glPushMatrix();
         pmvMatrix.glTranslatef(-2f, -2.25f, -0.25f);
@@ -1621,6 +1632,8 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         pmvMatrix.glPopMatrix();
 
 
+        /*Koordinaten für die letzte Position des fallenden Spielsteines
+        wird festgelegt */
         if (stay) {
 
             block=block1;

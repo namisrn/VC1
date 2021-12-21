@@ -122,9 +122,13 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
 
     float[] barrey = verticies;
     int block = 28;
+    //Startpunkt rechts/links
     float x = -1.5f;
+    //Startpunkt oben/unten
     float h = 1.5f;
+    //Startpunkt vorne/hinten
     float y = 0;
+    //Fallgeschwindigkeit
     float fall = 0.01f;
     boolean start = true;
     public static boolean go = false;
@@ -237,6 +241,7 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         initObject7(gl);
         initObject8(gl);
         initObject9(gl);
+        //Die Blöcke werden aufgerufen
         initblock1(gl);
         initblock2(gl);
         initblock3(gl);
@@ -1642,7 +1647,7 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
 
 
     }
-
+//fallen Methode um den Endpunkt der Blöcke zu definieren
     public void fallen(){
         h = h - fall;
 
@@ -1655,10 +1660,9 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
     }
 
 
-
+//random Methode um die Blöcke zufällig zu laden
     public void random(){
 
-       // fall=0.01f;
 
         if(start==true) {
 

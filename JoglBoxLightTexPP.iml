@@ -7,17 +7,35 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="JOGL" level="application" />
-    <orderEntry type="library" name="OpenCV" level="application" />
-    <orderEntry type="module-library">
+    <orderEntry type="library" exported="" name="JOGL" level="project" />
+    <orderEntry type="library" exported="" name="opencv-454" level="project" />
+    <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../OBJLoader-3.0.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../wetransfer_objloader_2021-12-21_1338/ObjLoader/OBJLoader-3.0.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$MODULE_DIR$/../OBJLoader-3.0.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../wetransfer_objloader_2021-12-21_1338/ObjLoader/OBJLoader-3.0.0.jar!/" />
         </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Program Files/Java/jogamp-all-platforms/jar/gluegen-rt.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="jar://C:/Program Files/Java/jogamp-all-platforms/jar/jogl-all.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
       </library>
     </orderEntry>
   </component>

@@ -89,14 +89,17 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
 
     private static final Path objFile = Paths.get("./resources/models/gerade.obj");
     private static final Path objFile1 = Paths.get("./resources/models/L_Links.obj");
-    private static final Path objFile2 = Paths.get("./resources/models/Quadrat.obj");
+    private static final Path objFile2 = Paths.get("./resources/models/quadrat.obj");
     private static final Path objFile3 = Paths.get("./resources/models/podest.obj");
+    private static final Path objFile4 = Paths.get("./resources/models/L_Rechts.obj");
 
 
     float [] verticies;
     float [] verticies1;
     float [] verticies2;
     float [] verticies3;
+    float [] verticies4;
+
 
 
     // taking texture files from relative path
@@ -105,7 +108,6 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
     final String textureFileName = "HSHLLogo1.jpg";
 //    final String textureFileName = "HSHLLogo2.jpg";
 
-    private ShaderProgram shaderProgram0;
     private ShaderProgram shaderProgram1;
     private ShaderProgram shaderProgram2;
 
@@ -114,8 +116,14 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
     private int[] vboName;	// Name of vertex buffer object
     private int[] iboName;	// Name of index buffer object
 
-    float block1 = 0f;
-    float direction = 0.01f;
+    float[] barrey = verticies;
+    int block = 28;
+    float x = -0.25f;
+    float h = 0.25f;
+    float y = 0;
+    float fall = 0.01f;
+    boolean start = true;
+
 
 
     // Define Materials
@@ -190,17 +198,17 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
 
         // BEGIN: Preparing scene
         // BEGIN: Allocating vertex array objects and buffers for each object
-        int noOfObjects = 32;
+        int noOfObjects = 33;
         // create vertex array objects for noOfObjects objects (VAO)
         vaoName = new int[noOfObjects];
         gl.glGenVertexArrays(noOfObjects, vaoName, 0);
-        if (vaoName[0] < 31)
+        if (vaoName[0] < 32)
             System.err.println("Error allocating vertex array object (VAO).");
 
         // create vertex buffer objects for noOfObjects objects (VBO)
         vboName = new int[noOfObjects];
         gl.glGenBuffers(noOfObjects, vboName, 0);
-        if (vboName[0] < 31)
+        if (vboName[0] < 32)
             System.err.println("Error allocating vertex buffer object (VBO).");
 
         // create index buffer objects for noOfObjects objects (IBO)
@@ -225,6 +233,7 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         initblock2(gl);
         initblock3(gl);
         initblock4(gl);
+        initblock5(gl);
 
 
         // Specify light parameters
@@ -427,6 +436,49 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         gl.glVertexAttribPointer(1, 3, GL.GL_FLOAT, false, 6* Float.BYTES, 3* Float.BYTES);
     }
 
+    public void initblock5 (GL3 gl){
+        // Loading the vertex and fragment shaders and creation of the shader program.
+        gl.glBindVertexArray(vaoName[32]);
+        shaderProgram2 = new ShaderProgram(gl);
+        shaderProgram2.loadShaderAndCreateProgram(shaderPath,
+                vertexShader2FileName, fragmentShader2FileName);
+
+        float[] color2 = {0.5f, 0.2f, 0.5f};
+        float[] cubeVertices = Box.makeBoxVertices(0.5f, 0.5f, 0.4f, color2);
+
+        // Create object for projection-model-view matrix calculation.
+        pmvMatrix = new PMVMatrix();
+
+        // Vertices for drawing a triangle.
+        // To be transferred to a vertex buffer object on the GPU.
+        // Interleaved data layout: position, color
+        try {
+            verticies3 = new OBJLoader()
+                    .setLoadNormals(true) // tell the loader to also load normal data
+                    .loadMesh(Resource.file(objFile4)) // actually load the file
+                    .getVertices(); // take the vertices from the loaded mesh
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e); }
+// Activating this buffer as vertex buffer object.
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vboName[32]);
+        // Transferring the vertex data (see above) to the VBO on GPU.
+        // (floats use 4 bytes in Java)
+        gl.glBufferData(GL.GL_ARRAY_BUFFER, verticies4.length * Float.BYTES,
+                FloatBuffer.wrap(verticies3), GL.GL_STATIC_DRAW);
+
+        // Activate and map input for the vertex shader from VBO,
+        // taking care of interleaved layout of vertex data (position and color),
+        // Enable layout position 0
+        gl.glEnableVertexAttribArray(0);
+        // Map layout position 0 to the position information per vertex in the VBO.
+        gl.glVertexAttribPointer(0, 3, GL.GL_FLOAT, false, 6* Float.BYTES, 0);
+        // Enable layout position 1
+        gl.glEnableVertexAttribArray(1);
+        // Map layout position 1 to the color information per vertex in the VBO.
+        gl.glVertexAttribPointer(1, 3, GL.GL_FLOAT, false, 6* Float.BYTES, 3* Float.BYTES);
+    }
+
     /**
      * Initializes the GPU for drawing object0
      * @param gl OpenGL context
@@ -441,8 +493,8 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
     private void initObject0(GL3 gl) {
         // BEGIN: Prepare cube for drawing (object 1)
         gl.glBindVertexArray(vaoName[0]);
-        shaderProgram0 = new ShaderProgram(gl);
-        shaderProgram0.loadShaderAndCreateProgram(shaderPath,
+        shaderProgram1 = new ShaderProgram(gl);
+        shaderProgram1.loadShaderAndCreateProgram(shaderPath,
                 vertexShader1FileName, fragmentShader1FileName);
 
         float[] color2 = {0.5f, 0.2f, 0.5f};
@@ -1024,19 +1076,14 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         displayObject6(gl);
         pmvMatrix.glPopMatrix();*/
 
-        //Block 1
+        /*Block 1
         pmvMatrix.glPushMatrix();
-        pmvMatrix.glTranslatef(0.25f, block1, -0.25f);
+        pmvMatrix.glTranslatef(0.25f, 0f, -0.25f);
         displayBlock1(gl);
-        pmvMatrix.glPopMatrix();
+        pmvMatrix.glPopMatrix();*/
 
-        if (block1>= -3.83){
 
-            block1 = block1 - direction;
-
-        }
-
-        //Block 2
+        /*Block 2
         pmvMatrix.glPushMatrix();
         pmvMatrix.glTranslatef(0.25f, 0f, 0f);
         displayBlock2(gl);
@@ -1059,6 +1106,12 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         pmvMatrix.glTranslatef(0.25f, 0f, -1f);
         displayBlock4(gl);
         pmvMatrix.glPopMatrix();
+
+        //Block 5
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(0.25f, 0f, -1f);
+        displayBlock5(gl);
+        pmvMatrix.glPopMatrix();*/
 
 
 
@@ -1469,6 +1522,56 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
 
 
 
+       random();
+
+        pmvMatrix.glPushMatrix();
+        pmvMatrix.glTranslatef(x, h, y);
+        displayBlock1(gl);
+        pmvMatrix.glPopMatrix();
+
+        fallen();
+
+
+    }
+
+    public void fallen(){
+        h = h - fall;
+
+        if (h<= -3.25){
+            fall = fall*0;
+        }
+    }
+
+
+
+    public void random(){
+
+       // fall=0.01f;
+
+        if(start==true) {
+
+
+            double rand = Math.floor(Math.random() * 5);
+
+            if (rand == 0) {
+                block = 28;
+                barrey = verticies;
+                start = false;
+            } else if (rand == 1) {
+                block = 29;
+                barrey = verticies1;
+                start = false;
+            } else if (rand == 2) {
+                block = 30;
+                barrey = verticies2;
+                start = false;
+            } else if (rand == 3) {
+                block = 31;
+                barrey = verticies3;
+                start = false;
+            }
+        }
+
     }
 
 
@@ -1476,7 +1579,7 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
 
     //Block lang gerade
     private void displayObject0(GL3 gl) {
-        gl.glUseProgram(shaderProgram0.getShaderProgramID());
+        gl.glUseProgram(shaderProgram1.getShaderProgramID());
         // Transfer the PVM-Matrix (model-view and projection matrix) to the vertex shader
         gl.glUniformMatrix4fv(0, 1, false, pmvMatrix.glGetPMatrixf());
         gl.glUniformMatrix4fv(1, 1, false, pmvMatrix.glGetMvMatrixf());
@@ -1547,12 +1650,12 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         // Transfer the PVM-Matrix (model-view and projection matrix) to the vertex shader
         gl.glUniformMatrix4fv(0, 1, false, pmvMatrix.glGetPMatrixf());
         gl.glUniformMatrix4fv(1, 1, false, pmvMatrix.glGetMvMatrixf());
-        gl.glBindVertexArray(vaoName[28]);
+        gl.glBindVertexArray(vaoName[block]);
         // Draws the elements in the order defined by the index buffer object (IBO)
-        gl.glDrawArrays(GL.GL_TRIANGLES, 0, verticies.length);
+        gl.glDrawArrays(GL.GL_TRIANGLES, 0, barrey.length);
     }
 
-    private void displayBlock2(GL3 gl){
+   /* private void displayBlock2(GL3 gl){
         gl.glUseProgram(shaderProgram2.getShaderProgramID());
         // Transfer the PVM-Matrix (model-view and projection matrix) to the vertex shader
         gl.glUniformMatrix4fv(0, 1, false, pmvMatrix.glGetPMatrixf());
@@ -1580,7 +1683,16 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         gl.glBindVertexArray(vaoName[31]);
         // Draws the elements in the order defined by the index buffer object (IBO)
         gl.glDrawArrays(GL.GL_TRIANGLES, 0, verticies3.length);
-    }
+    }*/
+
+    /*private void displayBlock5(GL3 gl){
+        gl.glUseProgram(shaderProgram2.getShaderProgramID());
+        // Transfer the PVM-Matrix (model-view and projection matrix) to the vertex shader
+        gl.glUniformMatrix4fv(0, 1, false, pmvMatrix.glGetPMatrixf());
+        gl.glUniformMatrix4fv(1, 1, false, pmvMatrix.glGetMvMatrixf());
+        gl.glBindVertexArray(vaoName[block]);
+        // Draws the elements in the order defined by the index buffer object (IBO)
+        gl.glDrawArrays(GL.GL_TRIANGLES, 0, barrey.length);*/
 
 
     //Spielfeld
@@ -1649,8 +1761,8 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
 
         // Detach and delete shader program
         gl.glUseProgram(0);
-        shaderProgram0.deleteShaderProgram();
         shaderProgram1.deleteShaderProgram();
+        shaderProgram2.deleteShaderProgram();
 
         // deactivate VAO and VBO
         gl.glBindVertexArray(0);

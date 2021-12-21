@@ -142,7 +142,15 @@ public class InteractionHandler implements KeyListener, MouseListener, MouseMoti
      */
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
+
+        if (e.getKeyCode()==KeyEvent.VK_S){
+            BoxLightTexRendererPP.go = true;
+        }
         switch (keyCode) {
+
+
+
+
             case KeyEvent.VK_CONTROL:
                 ctrlKeyPressed = true;
                 break;

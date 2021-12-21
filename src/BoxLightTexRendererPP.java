@@ -92,6 +92,8 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
     private static final Path objFile2 = Paths.get("./resources/models/quadrat.obj");
     private static final Path objFile3 = Paths.get("./resources/models/podest.obj");
     private static final Path objFile4 = Paths.get("./resources/models/L_Rechts.obj");
+    private static final Path objFile5 = Paths.get("./resources/models/versetzt_links.obj");
+    private static final Path objFile6 = Paths.get("./resources/models/versetzt_rechts.obj");
 
 
     float [] verticies;
@@ -99,6 +101,8 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
     float [] verticies2;
     float [] verticies3;
     float [] verticies4;
+    float [] verticies5;
+    float [] verticies6;
 
 
 
@@ -118,11 +122,15 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
 
     float[] barrey = verticies;
     int block = 28;
-    float x = -0.25f;
-    float h = 0.25f;
+    float x = -1.5f;
+    float h = 1.5f;
     float y = 0;
     float fall = 0.01f;
     boolean start = true;
+    public static boolean go = false;
+    boolean stay = false;
+    float[] barrey1 = verticies;
+    int block1 = 28;
 
 
 
@@ -198,17 +206,17 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
 
         // BEGIN: Preparing scene
         // BEGIN: Allocating vertex array objects and buffers for each object
-        int noOfObjects = 33;
+        int noOfObjects = 35;
         // create vertex array objects for noOfObjects objects (VAO)
         vaoName = new int[noOfObjects];
         gl.glGenVertexArrays(noOfObjects, vaoName, 0);
-        if (vaoName[0] < 32)
+        if (vaoName[0] < 34)
             System.err.println("Error allocating vertex array object (VAO).");
 
         // create vertex buffer objects for noOfObjects objects (VBO)
         vboName = new int[noOfObjects];
         gl.glGenBuffers(noOfObjects, vboName, 0);
-        if (vboName[0] < 32)
+        if (vboName[0] < 34)
             System.err.println("Error allocating vertex buffer object (VBO).");
 
         // create index buffer objects for noOfObjects objects (IBO)
@@ -234,6 +242,8 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         initblock3(gl);
         initblock4(gl);
         initblock5(gl);
+        initblock6(gl);
+        initblock7(gl);
 
 
         // Specify light parameters
@@ -453,7 +463,7 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         // To be transferred to a vertex buffer object on the GPU.
         // Interleaved data layout: position, color
         try {
-            verticies3 = new OBJLoader()
+            verticies4 = new OBJLoader()
                     .setLoadNormals(true) // tell the loader to also load normal data
                     .loadMesh(Resource.file(objFile4)) // actually load the file
                     .getVertices(); // take the vertices from the loaded mesh
@@ -465,7 +475,93 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         // Transferring the vertex data (see above) to the VBO on GPU.
         // (floats use 4 bytes in Java)
         gl.glBufferData(GL.GL_ARRAY_BUFFER, verticies4.length * Float.BYTES,
-                FloatBuffer.wrap(verticies3), GL.GL_STATIC_DRAW);
+                FloatBuffer.wrap(verticies4), GL.GL_STATIC_DRAW);
+
+        // Activate and map input for the vertex shader from VBO,
+        // taking care of interleaved layout of vertex data (position and color),
+        // Enable layout position 0
+        gl.glEnableVertexAttribArray(0);
+        // Map layout position 0 to the position information per vertex in the VBO.
+        gl.glVertexAttribPointer(0, 3, GL.GL_FLOAT, false, 6* Float.BYTES, 0);
+        // Enable layout position 1
+        gl.glEnableVertexAttribArray(1);
+        // Map layout position 1 to the color information per vertex in the VBO.
+        gl.glVertexAttribPointer(1, 3, GL.GL_FLOAT, false, 6* Float.BYTES, 3* Float.BYTES);
+    }
+
+    public void initblock6 (GL3 gl){
+        // Loading the vertex and fragment shaders and creation of the shader program.
+        gl.glBindVertexArray(vaoName[33]);
+        shaderProgram2 = new ShaderProgram(gl);
+        shaderProgram2.loadShaderAndCreateProgram(shaderPath,
+                vertexShader2FileName, fragmentShader2FileName);
+
+        float[] color2 = {0.5f, 0.2f, 0.5f};
+        float[] cubeVertices = Box.makeBoxVertices(0.5f, 0.5f, 0.4f, color2);
+
+        // Create object for projection-model-view matrix calculation.
+        pmvMatrix = new PMVMatrix();
+
+        // Vertices for drawing a triangle.
+        // To be transferred to a vertex buffer object on the GPU.
+        // Interleaved data layout: position, color
+        try {
+            verticies5 = new OBJLoader()
+                    .setLoadNormals(true) // tell the loader to also load normal data
+                    .loadMesh(Resource.file(objFile5)) // actually load the file
+                    .getVertices(); // take the vertices from the loaded mesh
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e); }
+// Activating this buffer as vertex buffer object.
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vboName[33]);
+        // Transferring the vertex data (see above) to the VBO on GPU.
+        // (floats use 4 bytes in Java)
+        gl.glBufferData(GL.GL_ARRAY_BUFFER, verticies5.length * Float.BYTES,
+                FloatBuffer.wrap(verticies5), GL.GL_STATIC_DRAW);
+
+        // Activate and map input for the vertex shader from VBO,
+        // taking care of interleaved layout of vertex data (position and color),
+        // Enable layout position 0
+        gl.glEnableVertexAttribArray(0);
+        // Map layout position 0 to the position information per vertex in the VBO.
+        gl.glVertexAttribPointer(0, 3, GL.GL_FLOAT, false, 6* Float.BYTES, 0);
+        // Enable layout position 1
+        gl.glEnableVertexAttribArray(1);
+        // Map layout position 1 to the color information per vertex in the VBO.
+        gl.glVertexAttribPointer(1, 3, GL.GL_FLOAT, false, 6* Float.BYTES, 3* Float.BYTES);
+    }
+
+    public void initblock7 (GL3 gl){
+        // Loading the vertex and fragment shaders and creation of the shader program.
+        gl.glBindVertexArray(vaoName[34]);
+        shaderProgram2 = new ShaderProgram(gl);
+        shaderProgram2.loadShaderAndCreateProgram(shaderPath,
+                vertexShader2FileName, fragmentShader2FileName);
+
+        float[] color2 = {0.5f, 0.2f, 0.5f};
+        float[] cubeVertices = Box.makeBoxVertices(0.5f, 0.5f, 0.4f, color2);
+
+        // Create object for projection-model-view matrix calculation.
+        pmvMatrix = new PMVMatrix();
+
+        // Vertices for drawing a triangle.
+        // To be transferred to a vertex buffer object on the GPU.
+        // Interleaved data layout: position, color
+        try {
+            verticies6 = new OBJLoader()
+                    .setLoadNormals(true) // tell the loader to also load normal data
+                    .loadMesh(Resource.file(objFile6)) // actually load the file
+                    .getVertices(); // take the vertices from the loaded mesh
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e); }
+// Activating this buffer as vertex buffer object.
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vboName[34]);
+        // Transferring the vertex data (see above) to the VBO on GPU.
+        // (floats use 4 bytes in Java)
+        gl.glBufferData(GL.GL_ARRAY_BUFFER, verticies6.length * Float.BYTES,
+                FloatBuffer.wrap(verticies6), GL.GL_STATIC_DRAW);
 
         // Activate and map input for the vertex shader from VBO,
         // taking care of interleaved layout of vertex data (position and color),
@@ -1520,6 +1616,18 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         pmvMatrix.glPopMatrix();
 
 
+        if (stay) {
+
+            block=block1;
+            barrey=barrey1;
+
+            pmvMatrix.glPushMatrix();
+            pmvMatrix.glTranslatef(-1.5f, -2.25f, 0);
+            displayBlock1(gl);
+            pmvMatrix.glPopMatrix();
+        }
+        if (go){
+
 
 
        random();
@@ -1528,6 +1636,7 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         pmvMatrix.glTranslatef(x, h, y);
         displayBlock1(gl);
         pmvMatrix.glPopMatrix();
+        }
 
         fallen();
 
@@ -1537,9 +1646,12 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
     public void fallen(){
         h = h - fall;
 
-        if (h<= -3.25){
+        if (h<= -2.25f){
             fall = fall*0;
-        }
+
+
+        start=true;
+        stay=true;}
     }
 
 
@@ -1550,26 +1662,55 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
 
         if(start==true) {
 
-
-            double rand = Math.floor(Math.random() * 5);
+            fall=0.01f;
+            h=3;
+            double rand = Math.floor(Math.random() * 7);
 
             if (rand == 0) {
                 block = 28;
                 barrey = verticies;
+                block1 = 28;
+                barrey1 = verticies;
                 start = false;
             } else if (rand == 1) {
                 block = 29;
                 barrey = verticies1;
+                block1 = 29;
+                barrey1 = verticies1;
                 start = false;
+
             } else if (rand == 2) {
                 block = 30;
                 barrey = verticies2;
+                block1 = 30;
+                barrey1 = verticies2;
                 start = false;
             } else if (rand == 3) {
                 block = 31;
                 barrey = verticies3;
+                block1 = 31;
+                barrey1 = verticies3;
                 start = false;
-            }
+            } else if (rand == 4) {
+                block = 32;
+                barrey = verticies4;
+                block1 = 32;
+                barrey1 = verticies4;
+                start = false;}
+            else if (rand == 5) {
+                block = 33;
+                barrey = verticies5;
+                block1 = 33;
+                barrey1 = verticies5;
+                start = false;}
+            else if (rand == 6) {
+                block = 34;
+                barrey = verticies6;
+                block1 = 34;
+                barrey1 = verticies6;
+                start = false;}
+
+
         }
 
     }

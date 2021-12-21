@@ -3,7 +3,6 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
 import org.opencv.videoio.Videoio;
 import org.opencv.core.Point;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -22,34 +21,9 @@ public class VideoProcessing extends JFrame{
      * Create object and perform the processing by calling private member functions.
      */
 
-
-
 //constructor
     public VideoProcessing() {
-        panel1 = null;
-        createFrame();
         processShowVideo();
-    }
-
-    /**
-     * Create the JFrame to be displayed, displaying two images.
-     */
-    private void createFrame() {
-
-        JPanel contentPane = (JPanel) getContentPane();
-        contentPane.setLayout(new FlowLayout());
-
-        panel1 = new BufferedImagePanel();
-        contentPane.add(panel1);
-
-
-        // place the frame at the center of the screen and show
-        pack();
-        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        setLocation(dim.width/2 - getWidth()/2, dim.height/2 - getHeight()/2);
-
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setVisible(true);
     }
 
     private void processShowVideo() {
@@ -183,7 +157,7 @@ public class VideoProcessing extends JFrame{
             }
 
             //use the right matrix for certain function, mat or shape
-            panel1.setImage(Mat2BufferedImage(shape));
+            BoxLightTexMainWindowPP.panel1.setImage(Mat2BufferedImage(shape));
             contours.clear();
 
         } //end of loop

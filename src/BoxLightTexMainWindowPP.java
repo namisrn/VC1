@@ -27,24 +27,21 @@
  */
 
 
+import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.FPSAnimator;
 import org.opencv.core.Core;
-import org.opencv.core.Mat;
-import org.opencv.core.Size;
-import org.opencv.imgcodecs.Imgcodecs;
-import org.opencv.imgproc.Imgproc;
-import org.opencv.videoio.VideoCapture;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.ArrayList;
+import static javax.swing.SwingConstants.*;
 
-import static org.opencv.imgproc.Imgproc.INTER_AREA;
 
 /**
  * Top-level class of the application displaying the OpenGL component.
@@ -67,12 +64,14 @@ public class BoxLightTexMainWindowPP extends JFrame {
 
     private static final long serialVersionUID = 1L;
     // Define constants for the top-level container
-    private static String TITLE = "Box with texture - Main Window - Programmable Pipeline";
+    private static String TITLE = "TETRIS - VC1 Projekt";
     private static final int CANVAS_WIDTH = 800;  // width of the drawable
     private static final int CANVAS_HEIGHT = 600; // height of the drawable
     private static final int FPS = 60; // animator's target frames per second
+    public static BufferedImagePanel panel1;
 
-    static{ System.loadLibrary(Core.NATIVE_LIBRARY_NAME);}
+
+
 
     public BoxLightTexMainWindowPP() {
         // Setup an OpenGL context for the Canvas
@@ -87,13 +86,95 @@ public class BoxLightTexMainWindowPP extends JFrame {
         GLCanvas canvas = new BoxLightTexRendererPP(capabilities);
         canvas.setPreferredSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT));
 
-
         // Create an animator that drives the canvas display() at the specified
         // frame rate.
         final FPSAnimator animator = new FPSAnimator(canvas, FPS, true);
 
+        /****************** INIT Buttons and TextArea ***************/
+
+        JButton playBtn = new JButton("Play");
+        playBtn.setPreferredSize(new Dimension(110,50));
+        JButton resetBtn = new JButton("Reset");
+        resetBtn.setPreferredSize(new Dimension(110,50));
+
+        /**************************************************************/
+
+        /********************** INIT MainContainer *******************/
+        this.setLocation(100,100);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setResizable(false);
+
+
+        Container mainContainer = this.getContentPane();
+        mainContainer.setLayout(new BorderLayout(8,6));
+        mainContainer.setBackground(Color.WHITE);
+        // mainContainer.setBackground(Color.YELLOW);
+        this.getRootPane().setBorder(BorderFactory.createMatteBorder(4,4,4,4,Color.WHITE));
+        /*************************************************************/
+
+        /*********************** INIT JPANELS ************************/
+
+
+        // Oberes Panel
+        JPanel topPanel = new JPanel();
+        // topPanel.setBorder(new LineBorder(Color.BLACK,3));
+        topPanel.setBackground(Color.WHITE);
+        // topPanel.setBackground(Color.ORANGE);
+        /* topPanel.setLayout(new FlowLayout(5));
+        topPanel.add(playBtn);
+        topPanel.add(resetBtn);
+        mainContainer.add(topPanel, BorderLayout.NORTH);*/
+
+
+        // Mittiges Panel
+        JPanel middlePanel = new JPanel();
+        // middlePanel.setBorder(new LineBorder(Color.BLACK,3));
+        middlePanel.setLayout(new FlowLayout(4,4,4));
+        middlePanel.setBackground(Color.WHITE);
+        //middlePanel.setBackground(Color.CYAN);
+
+        JPanel gridPanel = new JPanel();
+        gridPanel.setLayout(new GridLayout(1,1,5,5));
+        //gridPanel.setBorder(new LineBorder(Color.BLACK,3));
+        gridPanel.setBackground(Color.WHITE);
+        //gridPanel.setBackground(Color.RED);
+
+        panel1 = new BufferedImagePanel();
+        gridPanel.add(panel1);
+
+
+        middlePanel.add(gridPanel);
+        mainContainer.add(canvas);
+        mainContainer.add(middlePanel, BorderLayout.WEST);
+
+
+        // Unteres Panel
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.setLayout(new FlowLayout(3));
+
+        JLabel label = new JLabel("Log:");
+
+        JTextArea errorLog = new JTextArea(3,20);
+        errorLog.setBorder(new LineBorder(Color.BLACK,1));
+
+            // Plazierung btns
+        bottomPanel.add(playBtn);
+        bottomPanel.add(resetBtn);
+
+        bottomPanel.add(label);
+        bottomPanel.add(errorLog);
+
+        bottomPanel.setBackground(Color.WHITE);
+//        bottomPanel.setBackground(Color.MAGENTA);
+//        bottomPanel.setBorder(new LineBorder(Color.BLUE,3));
+        mainContainer.add(bottomPanel,BorderLayout.SOUTH);
+
+        /***********************************************************/
+
+        /***********************************************************/
         // Create the top-level container frame
-        this.getContentPane().add(canvas);
+//        this.getContentPane().add(mainContainer);
+        this.getContentPane();
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -118,6 +199,7 @@ public class BoxLightTexMainWindowPP extends JFrame {
         canvas.requestFocusInWindow();
     }
 
+    /*************************************************************/
     /**
      * Creates the main window and starts the program
      * @param args Arguments are not used
@@ -127,22 +209,8 @@ public class BoxLightTexMainWindowPP extends JFrame {
         //Initiate OPENGL window
         new BoxLightTexMainWindowPP();
 
-        /**
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new StartCodeMainWindowPP();
-            }
-        }
-        );
-
-        **/
-
         //Initiate OPENCV window
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        //VideoCapture capture = new VideoCapture(0);
-        //Mat matrix = new Mat();
-        //capture.read(matrix);
         new VideoProcessing();
     }
 }

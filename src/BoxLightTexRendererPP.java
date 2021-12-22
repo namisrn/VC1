@@ -87,6 +87,7 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
     private final String vertexShader2FileName = "O0_Basic.vert";
     private final String fragmentShader2FileName = "O0_Basic.frag";
 
+    //3D Objekte werden eingebunden
     private static final Path objFile = Paths.get("./resources/models/gerade.obj");
     private static final Path objFile1 = Paths.get("./resources/models/L_Links.obj");
     private static final Path objFile2 = Paths.get("./resources/models/quadrat.obj");
@@ -238,6 +239,8 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         //initObject4(gl);
         //initObject5(gl);
         //initObject6(gl);
+
+        //Das Spielfeld wird aufgerufen
         initObject7(gl);
         initObject8(gl);
         initObject9(gl);
@@ -278,7 +281,7 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         interactionHandler.setEyeZ(11);
         // END: Preparing scene
     }
-
+    //Die Spielsteine werden initialisiert
     public void initblock1 (GL3 gl){
         // Loading the vertex and fragment shaders and creation of the shader program.
         gl.glBindVertexArray(vaoName[28]);
@@ -869,7 +872,7 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
     }
     */
 
-    //initObject7 - initObject9 = Blöcke für das Spielfeld
+    //initObject7 - initObject9 = Blöcke für das Spielfeld werden initialisiert
     private void initObject7(GL3 gl) {
         // BEGIN: Prepare cube for drawing (object 1)
         gl.glBindVertexArray(vaoName[7]);
@@ -1231,7 +1234,7 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         //Spielfeld
 
 
-       //Rückseite des Spielfelds wird erstellt
+       //Rückseite des Spielfelds wird erstellt (Z.1237 - 1406)
 
         //Reihe 1
         pmvMatrix.glPushMatrix();
@@ -1408,7 +1411,7 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
 
 
 
-        //Seite des Spielfelds wird erstellt
+        //Seite des Spielfelds wird erstellt (Z.1414 - 1585)
 
         //Reihe 1
         pmvMatrix.glPushMatrix();
@@ -1582,7 +1585,7 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
 
 
 
-        //Boden des Spielfelds wird erstellt
+        //Boden des Spielfelds wird erstellt (Z.1588 - 1635)
         //Reihe 1
         pmvMatrix.glPushMatrix();
         pmvMatrix.glTranslatef(-2f, -2.25f, -0.25f);
@@ -1734,7 +1737,7 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
 
 
 
-
+ /*
     //Block lang gerade
     private void displayObject0(GL3 gl) {
         gl.glUseProgram(shaderProgram1.getShaderProgramID());
@@ -1802,7 +1805,8 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         // Draws the elements in the order defined by the index buffer object (IBO)
         gl.glDrawElements(GL.GL_TRIANGLE_STRIP, Box.noOfIndicesForBox(), GL.GL_UNSIGNED_INT, 0);
     }
-
+*/
+    //Spielstein wird dargestellt
     private void displayBlock1(GL3 gl){
         gl.glUseProgram(shaderProgram2.getShaderProgramID());
         // Transfer the PVM-Matrix (model-view and projection matrix) to the vertex shader
@@ -1853,7 +1857,7 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
         gl.glDrawArrays(GL.GL_TRIANGLES, 0, barrey.length);*/
 
 
-    //Spielfeld
+    //Spielfeld wird dargestellt
     //Spielfeld hinten
     private void displayObject7(GL3 gl) {
         gl.glUseProgram(shaderProgram1.getShaderProgramID());

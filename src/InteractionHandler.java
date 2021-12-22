@@ -140,6 +140,7 @@ public class InteractionHandler implements KeyListener, MouseListener, MouseMoti
      * Implements a method from the interface KeyListener
      * Handles all key input.
      */
+    //Wenn "S" gedrückt wird, startet das Spiel
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
 

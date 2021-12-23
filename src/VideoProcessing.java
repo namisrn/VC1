@@ -4,7 +4,6 @@ import org.opencv.videoio.VideoCapture;
 import org.opencv.videoio.Videoio;
 import org.opencv.core.Point;
 import javax.swing.*;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.util.ArrayList;
@@ -17,6 +16,9 @@ public class VideoProcessing extends JFrame{
     private BufferedImagePanel panel1;
     private static JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir"));
 
+
+//    float yAchse = BoxLightTexRendererPP.y = 0;
+
     /**
      * Create object and perform the processing by calling private member functions.
      */
@@ -26,7 +28,7 @@ public class VideoProcessing extends JFrame{
         processShowVideo();
     }
 
-    private void processShowVideo() {
+    private String processShowVideo() {
 
         // Prepare streaming from internal webcam
         //NOTE: "To open default camera using default backend just pass 0."
@@ -45,7 +47,6 @@ public class VideoProcessing extends JFrame{
         Mat shape = new Mat();
         Mat testContours = new Mat();
         List<MatOfPoint> contours = new ArrayList<>();
-
 
 
         //Check of file or camera can be opened
@@ -130,7 +131,6 @@ public class VideoProcessing extends JFrame{
                 MatOfPoint2f newPoint = new MatOfPoint2f(point.toArray());
                 newContours.add(newPoint);
             }
-
             //loop through possibilities
             for (int idx = 0; idx < contours.size(); idx++) {
                 MatOfPoint2f approx = new MatOfPoint2f(); //approx parameter count contours of objects; important for interaction handling
@@ -143,15 +143,23 @@ public class VideoProcessing extends JFrame{
                     //draw contours on objects
                     if (count == 5) {
                         Imgproc.drawContours(frame, contours, idx, new Scalar(75, 0, 0));
+                        BoxLightTexMainWindowPP.errorLog.setText("Fünfeck erkannt");
+                        BoxLightTexRendererPP.x -= 0.1;
                     }
                     if (count == 6) {
                         Imgproc.drawContours(frame, contours, idx, new Scalar(255, 255, 255));
+                        BoxLightTexMainWindowPP.errorLog.setText("Sechseck erkannt");
+                        BoxLightTexRendererPP.y -= 0.1;
                     }
                     if (count == 4) {
                         Imgproc.drawContours(frame, contours, idx, new Scalar(200, 0, 0));
+                        BoxLightTexMainWindowPP.errorLog.setText("Viereck erkannt");
+                        BoxLightTexRendererPP.x += 0.1;
                     }
                     if (count == 3) {
                         Imgproc.drawContours(frame, contours, idx, new Scalar(360, 100, 50));
+                        BoxLightTexMainWindowPP.errorLog.setText("Dreieck erkannt");
+                        BoxLightTexRendererPP.y += 0.1;
                     }
                 }
             }
@@ -163,6 +171,7 @@ public class VideoProcessing extends JFrame{
         } //end of loop
         //display original frame from the video stream
         cap.release();
+        return null;
     }
 
         /**

@@ -28,8 +28,10 @@
 
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.Date;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -70,8 +72,9 @@ public class BoxLightTexMainWindowPP extends JFrame {
     private static final int FPS = 60; // animator's target frames per second
     public static BufferedImagePanel panel1;
 
-
-
+    public static JTextArea errorLog;
+    public static JButton playBtn;
+    public JButton resetBtn;
 
     public BoxLightTexMainWindowPP() {
         // Setup an OpenGL context for the Canvas
@@ -90,20 +93,23 @@ public class BoxLightTexMainWindowPP extends JFrame {
         // frame rate.
         final FPSAnimator animator = new FPSAnimator(canvas, FPS, true);
 
-        /****************** INIT Buttons and TextArea ***************/
+        /****************** INIT Buttons und LogArea ***************/
 
-        JButton playBtn = new JButton("Play");
+        playBtn = new JButton("Play");
         playBtn.setPreferredSize(new Dimension(110,50));
-        JButton resetBtn = new JButton("Reset");
+        resetBtn = new JButton("Reset");
         resetBtn.setPreferredSize(new Dimension(110,50));
 
-        /**************************************************************/
+        JLabel label = new JLabel("Log:");
+        errorLog = new JTextArea(3,20);
+        errorLog.setBorder(new LineBorder(Color.BLACK,1));
+        errorLog.setEditable(false);
+        /************************************************************/
 
         /********************** INIT MainContainer *******************/
         this.setLocation(100,100);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
-
 
         Container mainContainer = this.getContentPane();
         mainContainer.setLayout(new BorderLayout(8,6));
@@ -113,31 +119,20 @@ public class BoxLightTexMainWindowPP extends JFrame {
         /*************************************************************/
 
         /*********************** INIT JPANELS ************************/
-
-
         // Oberes Panel
         JPanel topPanel = new JPanel();
-        // topPanel.setBorder(new LineBorder(Color.BLACK,3));
         topPanel.setBackground(Color.WHITE);
-        // topPanel.setBackground(Color.ORANGE);
-        /* topPanel.setLayout(new FlowLayout(5));
-        topPanel.add(playBtn);
-        topPanel.add(resetBtn);
-        mainContainer.add(topPanel, BorderLayout.NORTH);*/
+
 
 
         // Mittiges Panel
         JPanel middlePanel = new JPanel();
-        // middlePanel.setBorder(new LineBorder(Color.BLACK,3));
         middlePanel.setLayout(new FlowLayout(4,4,4));
         middlePanel.setBackground(Color.WHITE);
-        //middlePanel.setBackground(Color.CYAN);
 
         JPanel gridPanel = new JPanel();
         gridPanel.setLayout(new GridLayout(1,1,5,5));
-        //gridPanel.setBorder(new LineBorder(Color.BLACK,3));
         gridPanel.setBackground(Color.WHITE);
-        //gridPanel.setBackground(Color.RED);
 
         panel1 = new BufferedImagePanel();
         gridPanel.add(panel1);
@@ -152,21 +147,16 @@ public class BoxLightTexMainWindowPP extends JFrame {
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout(3));
 
-        JLabel label = new JLabel("Log:");
 
-        JTextArea errorLog = new JTextArea(3,20);
-        errorLog.setBorder(new LineBorder(Color.BLACK,1));
 
-            // Plazierung btns
+        // Plazierung btns
         bottomPanel.add(playBtn);
-        bottomPanel.add(resetBtn);
+//        bottomPanel.add(resetBtn);
 
         bottomPanel.add(label);
         bottomPanel.add(errorLog);
 
         bottomPanel.setBackground(Color.WHITE);
-//        bottomPanel.setBackground(Color.MAGENTA);
-//        bottomPanel.setBorder(new LineBorder(Color.BLUE,3));
         mainContainer.add(bottomPanel,BorderLayout.SOUTH);
 
         /***********************************************************/
@@ -204,6 +194,7 @@ public class BoxLightTexMainWindowPP extends JFrame {
      * Creates the main window and starts the program
      * @param args Arguments are not used
      */
+
     public static void main(String[] args) {
 
         //Initiate OPENGL window
@@ -212,6 +203,7 @@ public class BoxLightTexMainWindowPP extends JFrame {
         //Initiate OPENCV window
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         new VideoProcessing();
+
     }
 }
 

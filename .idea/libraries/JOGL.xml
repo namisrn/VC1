@@ -1,6 +1,9 @@
 <component name="libraryTable">
   <library name="JOGL">
-    <CLASSES />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../jogamp-all-platforms/jar/gluegen-rt.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../jogamp-all-platforms/jar/jogl-all.jar!/" />
+    </CLASSES>
     <JAVADOC />
     <SOURCES />
   </library>

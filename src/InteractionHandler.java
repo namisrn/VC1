@@ -190,7 +190,20 @@ public class InteractionHandler implements KeyListener, MouseListener, MouseMoti
                 eyeZ = eyeZ + eyeZInc;
                 break;
         }
+
+/*
+        float xAchse = BoxLightTexRendererPP.x;
+        int camShape = VideoProcessing.camShape;
+
+        if (camShape == 4) {
+            BoxLightTexMainWindowPP.errorLog.setText("Viereck True");
+            System.out.println("Viereck");
+        }
+
+*/
+
     }
+
 
     @Override
     /**
@@ -345,4 +358,17 @@ public class InteractionHandler implements KeyListener, MouseListener, MouseMoti
         }
         eyeZ += eyeZInc * mouseWheelScrollFactor * e.getPreciseWheelRotation();
     }
+
+/*    public void connection() {
+        float xAchse = BoxLightTexRendererPP.x;
+        int viereck = VideoProcessing.viereck;
+        int dreieck = VideoProcessing.dreieck;
+        int connection = 1;
+
+        if (connection == 1) {
+            BoxLightTexMainWindowPP.errorLog.setText("Viereck True");
+        }
+
+
+    }*/
 }

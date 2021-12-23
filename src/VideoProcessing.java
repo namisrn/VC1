@@ -10,7 +10,7 @@ import java.awt.image.DataBufferByte;
 import java.util.ArrayList;
 import java.util.List;
 
-/****** @author: JunYau Li ******/
+/****** @author: Jun Yao Li ******/
 
 
 public class VideoProcessing extends JFrame{

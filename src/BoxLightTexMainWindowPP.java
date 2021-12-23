@@ -190,6 +190,7 @@ public class BoxLightTexMainWindowPP extends JFrame {
         //Initiate OPENGL window
         new BoxLightTexMainWindowPP();
 
+        /****** @author: Jun Yao Li ******/
         //Initiate OPENCV window
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         new VideoProcessing();

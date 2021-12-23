@@ -10,6 +10,9 @@ import java.awt.image.DataBufferByte;
 import java.util.ArrayList;
 import java.util.List;
 
+/****** @author: JunYau Li ******/
+
+
 public class VideoProcessing extends JFrame{
     private double thresholdMin = 5;
     private double threshholdax = thresholdMin*3;
@@ -143,19 +146,26 @@ public class VideoProcessing extends JFrame{
                     //draw contours on objects
                     if (count == 5) {
                         Imgproc.drawContours(frame, contours, idx, new Scalar(75, 0, 0));
+                        BoxLightTexMainWindowPP.errorLog.setText("Fünfeck erkannt");        /****** @author: Sasan Rafat Nami ******/
+                        BoxLightTexRendererPP.x -= 0.1;                                     /****** @author: Sasan Rafat Nami ******/
                     }
                     if (count == 6) {
                         Imgproc.drawContours(frame, contours, idx, new Scalar(255, 255, 255));
+                        BoxLightTexMainWindowPP.errorLog.setText("Sechseck erkannt");       /****** @author: Sasan Rafat Nami ******/
+                        BoxLightTexRendererPP.y -= 0.1;                                     /****** @author: Sasan Rafat Nami ******/
                     }
                     if (count == 4) {
                         Imgproc.drawContours(frame, contours, idx, new Scalar(200, 0, 0));
+                        BoxLightTexMainWindowPP.errorLog.setText("Viereck erkannt");        /****** @author: Sasan Rafat Nami ******/
+                        BoxLightTexRendererPP.x += 0.1;                                     /****** @author: Sasan Rafat Nami ******/
                     }
                     if (count == 3) {
                         Imgproc.drawContours(frame, contours, idx, new Scalar(360, 100, 50));
+                        BoxLightTexMainWindowPP.errorLog.setText("Dreieck erkannt");        /****** @author: Sasan Rafat Nami ******/
+                        BoxLightTexRendererPP.y += 0.1;                                     /****** @author: Sasan Rafat Nami ******/
                     }
                 }
             }
-
             //use the right matrix for certain function, mat or shape
             BoxLightTexMainWindowPP.panel1.setImage(Mat2BufferedImage(shape));
             contours.clear();

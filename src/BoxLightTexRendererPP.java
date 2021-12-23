@@ -124,11 +124,11 @@ public class BoxLightTexRendererPP extends GLCanvas implements GLEventListener {
     float[] barrey = verticies;
     int block = 28;
     //Startpunkt rechts/links Autor @Luca
-    float x = -1.5f;
+    static float x = -1.5f;
     //Startpunkt oben/unten Autor @Luca
     float h = 1.5f;
     //Startpunkt vorne/hinten Autor @Luca
-    float y = 0;
+    static float y = 0;
     //Fallgeschwindigkeit Autor @Luca
     float fall = 0.01f;
     boolean start = true;

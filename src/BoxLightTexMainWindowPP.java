@@ -26,22 +26,18 @@
  * or implied, of JogAmp Community.
  */
 
-
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
 import javax.swing.*;
 import javax.swing.border.LineBorder;
-
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.FPSAnimator;
 import org.opencv.core.Core;
-
-import static javax.swing.SwingConstants.*;
-
+import javax.swing.*;
+import javax.swing.border.LineBorder;
 
 /**
  * Top-level class of the application displaying the OpenGL component.
@@ -60,17 +56,22 @@ import static javax.swing.SwingConstants.*;
  * @version 12.11.2017, 19.9.2019
  *
  */
+
 public class BoxLightTexMainWindowPP extends JFrame {
 
     private static final long serialVersionUID = 1L;
+
+
+    /****** @author: Sasan Rafat Nami ******/
+
     // Define constants for the top-level container
     private static String TITLE = "TETRIS - VC1 Projekt";
     private static final int CANVAS_WIDTH = 800;  // width of the drawable
     private static final int CANVAS_HEIGHT = 600; // height of the drawable
     private static final int FPS = 60; // animator's target frames per second
     public static BufferedImagePanel panel1;
-
-
+    public static JTextArea errorLog;
+    public static JButton playBtn;
 
 
     public BoxLightTexMainWindowPP() {
@@ -90,20 +91,23 @@ public class BoxLightTexMainWindowPP extends JFrame {
         // frame rate.
         final FPSAnimator animator = new FPSAnimator(canvas, FPS, true);
 
-        /****************** INIT Buttons and TextArea ***************/
+        /****************** INIT Buttons und LogArea ***************/
 
-        JButton playBtn = new JButton("Play");
+        playBtn = new JButton("Play");
         playBtn.setPreferredSize(new Dimension(110,50));
-        JButton resetBtn = new JButton("Reset");
-        resetBtn.setPreferredSize(new Dimension(110,50));
+        JLabel hinweis = new JLabel("Starten das Spiel entweder mit Play button oder drücken Sie auf S-Taste");
 
-        /**************************************************************/
+        JLabel label = new JLabel("Log:");
+        errorLog = new JTextArea(2,15);
+        errorLog.setBorder(new LineBorder(Color.BLACK,1));
+        errorLog.setEditable(false);
+        errorLog.setFont(errorLog.getFont().deriveFont(20f));
+        /************************************************************/
 
         /********************** INIT MainContainer *******************/
         this.setLocation(100,100);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
-
 
         Container mainContainer = this.getContentPane();
         mainContainer.setLayout(new BorderLayout(8,6));
@@ -113,65 +117,41 @@ public class BoxLightTexMainWindowPP extends JFrame {
         /*************************************************************/
 
         /*********************** INIT JPANELS ************************/
-
-
         // Oberes Panel
         JPanel topPanel = new JPanel();
-        // topPanel.setBorder(new LineBorder(Color.BLACK,3));
         topPanel.setBackground(Color.WHITE);
-        // topPanel.setBackground(Color.ORANGE);
-        /* topPanel.setLayout(new FlowLayout(5));
-        topPanel.add(playBtn);
-        topPanel.add(resetBtn);
-        mainContainer.add(topPanel, BorderLayout.NORTH);*/
-
 
         // Mittiges Panel
         JPanel middlePanel = new JPanel();
-        // middlePanel.setBorder(new LineBorder(Color.BLACK,3));
         middlePanel.setLayout(new FlowLayout(4,4,4));
         middlePanel.setBackground(Color.WHITE);
-        //middlePanel.setBackground(Color.CYAN);
 
         JPanel gridPanel = new JPanel();
         gridPanel.setLayout(new GridLayout(1,1,5,5));
-        //gridPanel.setBorder(new LineBorder(Color.BLACK,3));
         gridPanel.setBackground(Color.WHITE);
-        //gridPanel.setBackground(Color.RED);
 
         panel1 = new BufferedImagePanel();
         gridPanel.add(panel1);
-
 
         middlePanel.add(gridPanel);
         mainContainer.add(canvas);
         mainContainer.add(middlePanel, BorderLayout.WEST);
 
-
         // Unteres Panel
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout(3));
 
-        JLabel label = new JLabel("Log:");
-
-        JTextArea errorLog = new JTextArea(3,20);
-        errorLog.setBorder(new LineBorder(Color.BLACK,1));
-
-            // Plazierung btns
+        // Plazierung btn und Label
         bottomPanel.add(playBtn);
-        bottomPanel.add(resetBtn);
-
         bottomPanel.add(label);
         bottomPanel.add(errorLog);
+        bottomPanel.add(hinweis);
 
         bottomPanel.setBackground(Color.WHITE);
-//        bottomPanel.setBackground(Color.MAGENTA);
-//        bottomPanel.setBorder(new LineBorder(Color.BLUE,3));
         mainContainer.add(bottomPanel,BorderLayout.SOUTH);
 
         /***********************************************************/
 
-        /***********************************************************/
         // Create the top-level container frame
 //        this.getContentPane().add(mainContainer);
         this.getContentPane();
@@ -204,6 +184,7 @@ public class BoxLightTexMainWindowPP extends JFrame {
      * Creates the main window and starts the program
      * @param args Arguments are not used
      */
+
     public static void main(String[] args) {
 
         //Initiate OPENGL window
@@ -212,6 +193,6 @@ public class BoxLightTexMainWindowPP extends JFrame {
         //Initiate OPENCV window
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         new VideoProcessing();
+
     }
 }
-

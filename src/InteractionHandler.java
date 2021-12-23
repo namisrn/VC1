@@ -140,17 +140,22 @@ public class InteractionHandler implements KeyListener, MouseListener, MouseMoti
      * Implements a method from the interface KeyListener
      * Handles all key input.
      */
+
+
     //Wenn "S" gedrückt wird, startet das Spiel Autor @Tom
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
 
+
         if (e.getKeyCode()==KeyEvent.VK_S){
             BoxLightTexRendererPP.go = true;
         }
+
+
+
+
+
         switch (keyCode) {
-
-
-
 
             case KeyEvent.VK_CONTROL:
                 ctrlKeyPressed = true;
@@ -214,6 +219,7 @@ public class InteractionHandler implements KeyListener, MouseListener, MouseMoti
      * Implements one method of the interface MouseListener
      */
     public void mouseClicked(MouseEvent e) {
+
     }
 
     @Override
@@ -221,6 +227,18 @@ public class InteractionHandler implements KeyListener, MouseListener, MouseMoti
      * Implements one method of the interface MouseListener
      */
     public void mousePressed(MouseEvent e) {
+
+        /****** @author: Sasan Rafat Nami ******/
+        // Spiel wird gestartet, wenn man auf PlayBtn-drückt
+        BoxLightTexMainWindowPP.playBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BoxLightTexMainWindowPP.errorLog.setText("Spiel wird gestartet");
+                BoxLightTexRendererPP.go = true;
+            }
+        });
+
+
         int pressedButton = e.getButton();
         lastMouseLocation = e.getLocationOnScreen();
         if (VERBOSE) {
